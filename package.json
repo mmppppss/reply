@@ -14,8 +14,10 @@
 	"packageManager": "pnpm@10.13.1",
 	"dependencies": {
 		"baileys": "7.0.0-rc.9",
+		"mysql2": "^3.16.0",
 		"pino": "^10.1.1",
-		"qrcode-terminal": "^0.12.0"
+		"qrcode-terminal": "^0.12.0",
+		"sequelize": "^6.37.7"
 	},
 	"devDependencies": {
 		"@types/node": "^25.0.6",
