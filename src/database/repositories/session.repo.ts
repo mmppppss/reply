@@ -19,5 +19,12 @@ export class Session{
             .where(eq(sessions.id, id))
         return result;
     }
-
+    async update(id:number, data: any){
+        const result =await db
+            .update(sessions)
+            .set(data)
+            .where(eq(sessions.id, id))
+        return result[0].affectedRows > 0;
+	}
+    
 }
