@@ -2,8 +2,8 @@ import { Logger } from '@/infrastructure/logging/Logger';
 import { WhatsAppConnector } from '@/modules/whatsapp/infrastructure/WhatsAppConector';
 import { printQR } from '@/infrastructure/runtime/printQR';
 import { processMessage } from '@/modules/whatsapp/application/messageProcessor'
-import { ClientsRepo } from '@/database/repositories/client.repo'
-import { Client } from './types/client';
+import { ClientsRepo } from '@/infrastructure/database/repositories/client.repo'
+import { Client } from '@/types/client';
 
 export default async function server() {
 	const logger = new Logger();

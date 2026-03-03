@@ -1,6 +1,6 @@
 import { db } from "../index";
 import { clients } from "../schema/clients.schema";
-import { Client, CreateClientDto } from "../../types/client";
+import { Client, CreateClientDto } from "../../../types/client";
 import { eq } from "drizzle-orm";
 
 export class ClientsRepo {
