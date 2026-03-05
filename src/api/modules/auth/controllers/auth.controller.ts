@@ -10,15 +10,15 @@ export class AuthController {
 	}
 	public login = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const { email, password } = req.body;
+			const { email, username, password } = req.body;
 
-			if (!email || !password) {
+			if ((!email || !username)|| !password) {
 				return res.status(400).json({
 					message: "Missing email or password"
 				});
 			}
 
-			const result = await this.authService.login(email, password);
+			const result = await this.authService.login(req.body);
 
 			return res.status(200).json(result);
 

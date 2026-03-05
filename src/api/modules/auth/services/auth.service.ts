@@ -19,8 +19,9 @@ export class AuthService {
         };
     }
 
-    public async login(email: string, password: string) {
+    public async login(body: any) {
 
+		const { email, username, password } = body;
         if (email !== "admin@example.com" || password !== "123456") {
             throw new Error("Invalid credentials");
         }
