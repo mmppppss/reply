@@ -8,9 +8,13 @@
 		// See also https://aka.ms/tsconfig/module
 		"module": "nodenext",
 		"target": "esnext",
-		"types": ["node"],
+		"types": [
+			"node"
+		],
 		// For nodejs:
-		"lib": ["esnext"],
+		"lib": [
+			"esnext"
+		],
 		// "types": ["node"],
 		// and npm install -D @types/node
 		// Other Outputs
@@ -39,7 +43,14 @@
 			"@/*": [
 				"src/*"
 			]
-		},
-		"include":["src", "test"]
-	}
+		}
+	},
+	"include": [
+		"src"
+	],
+	"exclude": [
+		"node_modules",
+		"dist",
+		"test"
+	]
 }

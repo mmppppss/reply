@@ -1,11 +1,12 @@
 {
-	"name": "whabot",
+	"name": "reply",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
+		"build": "node build.js",
 		"test": "vitest",
-		"start": "pnpm exec tsx src/index.ts",
+		"start": "node --env-file=.env dist/index.js",
 		"dev": "node --env-file=.env node_modules/tsx/dist/cli.mjs watch src/index.ts"
 	},
 	"keywords": [],
@@ -26,9 +27,14 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
+		"@types/bcrypt": "^6.0.0",
+		"@types/cors": "^2.8.19",
+		"@types/express": "^5.0.6",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/node": "^25.0.6",
+		"@types/qrcode-terminal": "^0.12.2",
 		"drizzle-kit": "^0.31.8",
+		"esbuild": "^0.27.4",
 		"tsx": "^4.21.0",
 		"typescript": "^5.9.3",
 		"vitest": "^4.0.16"
