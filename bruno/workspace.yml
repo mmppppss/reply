@@ -8,9 +8,11 @@ collections:
     path: "collections/user"
   - name: "auth"
     path: "collections/auth"
+  - name: "check"
+    path: "collections/check"
 
 specs:
 
 docs: ''
 
-activeEnvironmentUid: 109x9wr00000000000000
+activeEnvironmentUid: ye56pk000000000000000

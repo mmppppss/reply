@@ -16,10 +16,12 @@ app.use(express.json());
 //     console.log(process.memoryUsage().rss/1024/1024);
 //     next();
 // });
+// checkhealt
 const router: Router = Router();
 router.get("/hello", (req, res)=>{
 	res.send("hello");
 })
+app.use(router)
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes)

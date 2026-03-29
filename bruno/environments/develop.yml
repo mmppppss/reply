@@ -1,0 +1,6 @@
+name: develop
+variables:
+  - name: token_jwt
+    value: ""
+  - name: url
+    value: http://server.softproject.qzz.io:8080
