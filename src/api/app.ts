@@ -1,4 +1,4 @@
-import express, {Express} from "express";
+import express, {Express, Router} from "express";
 import cors from "cors";
 import helmet from "helmet";
 
@@ -16,6 +16,10 @@ app.use(express.json());
 //     console.log(process.memoryUsage().rss/1024/1024);
 //     next();
 // });
+const router: Router = Router();
+router.get("/hello", (req, res)=>{
+	res.send("hello");
+})
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes)
