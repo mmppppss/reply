@@ -4,3 +4,5 @@ variables:
     value: ""
   - name: url
     value: http://localhost:3000
+  - name: id_user
+    value: 3a54d87a-d070-4b1a-8caa-8e9a86ec6b83

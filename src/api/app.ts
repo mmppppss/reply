@@ -4,6 +4,7 @@ import helmet from "helmet";
 
 import authRoutes from "./modules/auth/routes/auth.routes";
 import userRoutes from "./modules/user/routes/user.routes";
+import whatsappRoutes from "./modules/whatsapp/routes/whatsapp.routes";
 
 const app: Express = express();
 
@@ -24,7 +25,8 @@ router.get("/hello", (req, res)=>{
 app.use(router)
 
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/user", userRoutes)
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/users", whatsappRoutes);
 
 
 export default app;

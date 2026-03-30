@@ -1,10 +1,12 @@
 import { sql } from "drizzle-orm";
-import { mysqlTable, int, varchar, datetime } from "drizzle-orm/mysql-core";
-import { clients } from "./clients.schema";
+import { mysqlTable, datetime, char } from "drizzle-orm/mysql-core";
+import { users } from "./users.schema";
 
 export const sessions = mysqlTable("sessions", {
-    id: int("id").primaryKey().autoincrement(),
-    idCliente: int("id_cliente").references(()=>clients.id),
-    createdAt: datetime("created_at").notNull().default(sql`now()`)
+	id: char("id", { length: 36 }).primaryKey(),
+	idUser: char("id_user", {length:36}).references(()=>users.id),
+	status: char("status", {length:1}).notNull().default("P"),
+    createdAt: datetime("created_at").notNull().default(sql`now()`),
+	updatedAt: datetime("updated_at").notNull().default(sql`now()`)
 });
 

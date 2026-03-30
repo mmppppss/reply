@@ -26,4 +26,16 @@ export abstract class BaseRepository<
 
 		return result[0] ?? null;
 	}
+
+	/**
+	 * deleteById.
+	 *
+	 * @param {number} id
+	 */
+	async deleteById(id: number) {
+		const result = await this.db
+			.delete(this.table)
+			.where(eq(this.idColumn as any, id))
+		return result;
+	}
 }

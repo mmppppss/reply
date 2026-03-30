@@ -8,6 +8,13 @@
       "when": 1774127120964,
       "tag": "0000_mysterious_impossible_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1774891018196,
+      "tag": "0001_misty_red_skull",
+      "breakpoints": true
     }
   ]
 }

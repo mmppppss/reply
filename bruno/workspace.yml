@@ -10,9 +10,11 @@ collections:
     path: "collections/auth"
   - name: "check"
     path: "collections/check"
+  - name: "whatsapp"
+    path: "collections/whatsapp"
 
 specs:
 
 docs: ''
 
-activeEnvironmentUid: ye56pk000000000000000
+activeEnvironmentUid: 109x9wr00000000000000

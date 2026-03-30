@@ -1,52 +1,40 @@
 // @ts-check
-import { eq } from "drizzle-orm";
-import { db } from "../index";
 import { sessions } from "../schema/sessions.schema";
+import { MySql2Database } from "drizzle-orm/mysql2";
+import { BaseRepository } from "./base.repo";
+import { randomUUID } from "crypto";
+import { eq } from "drizzle-orm";
 
 
-export class Session {
-	/**
-	 * Find all sessions
-	 *
-	 * @returns array sesions
-	 */
-	async findAll() {
-		return db.select().from(sessions);
+export class SessionRepository extends BaseRepository<
+	typeof sessions,
+	string
+> {
+	constructor(dbInstance: MySql2Database<any>) {
+		super(dbInstance, sessions, sessions.id);
 	}
 
-	/**
-	 * Create 
-	 *
-	 */
-	async create(data: any) {
-		const result = await db
-			.insert(sessions)
-			.values(data);
-		return result;
-	}
-	/**
-	 * deleteById.
-	 *
-	 * @param {number} id
-	 */
-	async deleteById(id: number) {
-		const result = await db
-			.delete(sessions)
-			.where(eq(sessions.id, id))
-		return result;
-	}
-	/**
-	 * update.
-	 *
-	 * @param {number} id
-	 * @param {any} data
-	 */
-	async update(id: number, data: any) {
-		const result = await db
-			.update(sessions)
-			.set(data)
-			.where(eq(sessions.id, id))
-		return result[0].affectedRows > 0;
+	async create(idUser: string): Promise<any> {
+		const id = randomUUID();
+		await this.db.insert(sessions).values({
+			id,
+			idUser
+		});
+
+		const created = await this.findById(id);
+		if (!created) {
+			throw new Error("[SESSION REPO 001] Session creation failed");
+		}
+
+		return created;
 	}
 
+	async findByUserId(idUser: string): Promise<any> {
+		const session = await this.db
+			.select()
+			.from(sessions)
+			.where(eq(sessions.idUser, idUser));
+
+		return session ?? null;
+	}
 }
