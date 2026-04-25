@@ -4,3 +4,5 @@ variables:
     value: ""
   - name: url
     value: http://server.softproject.qzz.io:8080
+  - name: id_user
+    value: 3a54d87a-d070-4b1a-8caa-8e9a86ec6b83
