@@ -21,8 +21,9 @@ export class ClientsRepo {
 	async create(data: CreateClientDto): Promise<boolean> {
 		const result = await db
 			.insert(clients)
-			.values(data);
-		return result[0].affectedRows > 0;
+			.values(data)
+			.returning();
+		return result.length > 0;
 	}
 
 	async update(id: number, data: Partial<CreateClientDto>): Promise<boolean> {
@@ -30,15 +31,17 @@ export class ClientsRepo {
 			.update(clients)
 			.set(data)
 			.where(eq(clients.id, id))
+			.returning();
 
-		return result[0].affectedRows > 0;
+		return result.length > 0;
 	}
 
 	async deleteById(id: number): Promise<boolean> {
 		const result = await db
 			.delete(clients)
 			.where(eq(clients.id, id))
+			.returning();
 
-		return result[0].affectedRows > 0;
+		return result.length > 0;
 	}
 }

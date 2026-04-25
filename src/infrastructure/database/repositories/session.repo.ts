@@ -1,6 +1,6 @@
 // @ts-check
 import { sessions } from "../schema/sessions.schema";
-import { MySql2Database } from "drizzle-orm/mysql2";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { BaseRepository } from "./base.repo";
 import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
@@ -10,7 +10,7 @@ export class SessionRepository extends BaseRepository<
 	typeof sessions,
 	string
 > {
-	constructor(dbInstance: MySql2Database<any>) {
+	constructor(dbInstance: PostgresJsDatabase<any>) {
 		super(dbInstance, sessions, sessions.id);
 	}
 

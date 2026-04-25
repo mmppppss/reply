@@ -1,40 +1,35 @@
-import { MySqlTable } from "drizzle-orm/mysql-core";
 import { eq, InferSelectModel } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { Table } from "drizzle-orm";
 export abstract class BaseRepository<
-	TTable extends MySqlTable,
+	TTable extends Table,
 	TId
 > {
 	constructor(
-		protected readonly db: MySql2Database<any>,
+		protected readonly db: PostgresJsDatabase<any>,
 		protected table: TTable,
-		protected idColumn: TTable["_"]["columns"][string]
+		protected idColumn: any
 	) { }
 
-	async findAll(): Promise<InferSelectModel<TTable>[]> {
-		return this.db.select().from(this.table);
+	async findAll(): Promise<any[]> {
+		return this.db.select().from(this.table as any);
 	}
 
 	async findById(
 		id: TId
-	): Promise<InferSelectModel<TTable> | null> {
+	): Promise<any | null> {
 		const result = await this.db
 			.select()
-			.from(this.table)
+			.from(this.table as any)
 			.where(eq(this.idColumn as any, id))
 			.limit(1);
 
 		return result[0] ?? null;
 	}
 
-	/**
-	 * deleteById.
-	 *
-	 * @param {number} id
-	 */
-	async deleteById(id: number) {
+	async deleteById(id: TId) {
 		const result = await this.db
-			.delete(this.table)
+			.delete(this.table as any)
 			.where(eq(this.idColumn as any, id))
 		return result;
 	}

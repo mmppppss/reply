@@ -3,13 +3,13 @@ import { users } from "../schema/users.schema";
 import { eq } from "drizzle-orm";
 import { User } from "../types/user.type";
 import { randomUUID } from "crypto";
-import { MySql2Database } from "drizzle-orm/mysql2";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 export class UserRepository extends BaseRepository<
 	typeof users,
 	string
 > {
-	constructor(dbInstance: MySql2Database<any>) {
+	constructor(dbInstance: PostgresJsDatabase<any>) {
 		super(dbInstance, users, users.id);
 	}
 

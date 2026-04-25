@@ -1,12 +1,11 @@
 import { sql } from "drizzle-orm";
-import { mysqlTable, datetime, char } from "drizzle-orm/mysql-core";
+import { pgTable, timestamp, uuid, char } from "drizzle-orm/pg-core";
 import { users } from "./users.schema";
 
-export const sessions = mysqlTable("sessions", {
-	id: char("id", { length: 36 }).primaryKey(),
-	idUser: char("id_user", {length:36}).references(()=>users.id),
+export const sessions = pgTable("sessions", {
+	id: uuid("id").primaryKey().defaultRandom(),
+	idUser: uuid("id_user").references(()=>users.id),
 	status: char("status", {length:1}).notNull().default("P"),
-    createdAt: datetime("created_at").notNull().default(sql`now()`),
-	updatedAt: datetime("updated_at").notNull().default(sql`now()`)
+    createdAt: timestamp("created_at").notNull().default(sql`now()`),
+	updatedAt: timestamp("updated_at").notNull().default(sql`now()`)
 });
-

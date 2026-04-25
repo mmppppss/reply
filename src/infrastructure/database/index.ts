@@ -1,6 +1,6 @@
 import { Logger } from "@/infrastructure/logging/Logger";
-import { drizzle } from "drizzle-orm/mysql2";
-import mysql from "mysql2/promise";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 
 const logger = new Logger();
 const connectionString = process.env.DATABASE_URL;
@@ -9,15 +9,15 @@ if (!connectionString) {
   throw new Error("DATABASE_URL no está definida en las variables de entorno");
 }
 
-const pool = mysql.createPool({
-	uri: connectionString,
-	ssl: { rejectUnauthorized: true }
-});
+const queryClient = postgres(connectionString);
 
 (async () => {
-	const connection = await pool.getConnection();
-	logger.success("Database conected", {system: true});
-	connection.release();
+	try {
+		await queryClient`SELECT 1`;
+		logger.success("Database conected", {system: true});
+	} catch (err) {
+		logger.error("Database connection failed", {system: true, extra: err});
+	}
 })();
 
-export const db = drizzle(pool);
+export const db = drizzle(queryClient);
