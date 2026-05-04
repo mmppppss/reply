@@ -1,11 +1,12 @@
-import { sql } from "drizzle-orm";
 import { pgTable, timestamp, uuid, char } from "drizzle-orm/pg-core";
-import { users } from "./users.schema";
+import { agents } from "./agents.schema";
+import { providers } from "./providers.schema";
 
 export const sessions = pgTable("sessions", {
 	id: uuid("id").primaryKey().defaultRandom(),
-	idUser: uuid("id_user").references(()=>users.id),
+	idAgent: uuid("id_agent").references(()=>agents.id),
+	idProvider: uuid("id_provider").references(()=>providers.id),
 	status: char("status", {length:1}).notNull().default("P"),
-    createdAt: timestamp("created_at").notNull().default(sql`now()`),
-	updatedAt: timestamp("updated_at").notNull().default(sql`now()`)
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow()
 });
