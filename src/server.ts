@@ -2,14 +2,18 @@ import { Logger } from '@/infrastructure/logging/Logger';
 import { WhatsAppConnector } from '@/modules/whatsapp/infrastructure/WhatsAppConector';
 import { printQR } from '@/infrastructure/runtime/printQR';
 import { processMessage } from '@/modules/whatsapp/application/messageProcessor'
-import { ClientsRepo } from '@/infrastructure/database/repositories/client.repo'
 import { Client } from '@/types/client';
 
 export default async function server() {
 	const logger = new Logger();
-	const client = new ClientsRepo();
-	const clients = await client.findAll();
-	
+	const xy:Client = {
+		id: 1,
+		name: 'bot1',
+		email: 'bot1',
+		phone: 'bot1',
+		createdAt: new Date(),
+	};
+	const clients = [xy];
 	clients.forEach((session: Client) => {
 		const connector = new WhatsAppConnector({
 			sessionId: session.name,
