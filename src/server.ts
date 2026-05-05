@@ -6,14 +6,7 @@ import { Client } from '@/types/client';
 
 export default async function server() {
 	const logger = new Logger();
-	const xy:Client = {
-		id: 1,
-		name: 'bot1',
-		email: 'bot1',
-		phone: 'bot1',
-		createdAt: new Date(),
-	};
-	const clients = [xy];
+	const clients = [];
 	clients.forEach((session: Client) => {
 		const connector = new WhatsAppConnector({
 			sessionId: session.name,
