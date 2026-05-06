@@ -20,7 +20,7 @@ app.use(express.json());
 // checkhealt
 const router: Router = Router();
 router.get("/hello", (req, res) => {
-	res.send("hello");
+	res.send("hello test");
 });
 app.use(router);
 
