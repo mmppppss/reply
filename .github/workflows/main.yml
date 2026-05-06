@@ -1,0 +1,34 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd $HOME/reply/
+            
+            echo "git pull..."
+            git pull origin main
+            
+            echo "dependencias..."
+            pnpm install --frozen-lockfile
+            
+            echo "build..."
+            pnpm build
+            
+            echo "PM2..."
+            pm2 reload reply || pm2 start "pnpm start" --name reply
+            
+            pm2 save
