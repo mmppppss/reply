@@ -9,6 +9,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Verificar conectividad IPv6
+        run: |
+          echo "=== Interfaces IPv6 ==="
+          ip -6 addr show
+          echo "=== Ping IPv6 a google ==="
+          ping6 -c 2 ipv6.google.com || echo "No hay IPv6"
       - name: SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
