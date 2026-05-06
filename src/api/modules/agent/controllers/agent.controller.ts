@@ -30,11 +30,11 @@ export class AgentController {
 
 	public connect = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const result = await this.agentService.connect(req.query, req.params);
-			return res.status(201).json({
-				message: "QR code generated successfully",
-				data: result,
-			});
+			const result = await this.agentService.connect(
+				req.query,
+				req.params,
+				res,
+			);
 		} catch (error: any) {
 			return res.status(400).json({
 				message: error.message || "Error creating agent",

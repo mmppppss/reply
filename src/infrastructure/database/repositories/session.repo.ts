@@ -5,20 +5,17 @@ import { BaseRepository } from "./base.repo";
 import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
 
-
-export class SessionRepository extends BaseRepository<
-	typeof sessions,
-	string
-> {
+export class SessionRepository extends BaseRepository<typeof sessions, string> {
 	constructor(dbInstance: PostgresJsDatabase<any>) {
 		super(dbInstance, sessions, sessions.id);
 	}
 
-	async create(idUser: string): Promise<any> {
+	async create(idUser: string, idProvider?: string): Promise<any> {
 		const id = randomUUID();
 		await this.db.insert(sessions).values({
 			id,
-			idUser
+			idUser,
+			idProvider,
 		});
 
 		const created = await this.findById(id);
@@ -29,12 +26,22 @@ export class SessionRepository extends BaseRepository<
 		return created;
 	}
 
-	async findByUserId(idUser: string): Promise<any> {
+	async findByAgentId(idAgent: string): Promise<any> {
 		const session = await this.db
 			.select()
 			.from(sessions)
-			.where(eq(sessions.idUser, idUser));
+			.where(eq(sessions.idAgent, idAgent));
 
 		return session ?? null;
+	}
+
+	async updateStatus(id: string, status: string): Promise<void> {
+		await this.db
+			.update(sessions)
+			.set({
+				status,
+				updatedAt: new Date(),
+			})
+			.where(eq(sessions.id, id));
 	}
 }

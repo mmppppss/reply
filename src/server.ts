@@ -1,8 +1,8 @@
-import { Logger } from '@/infrastructure/logging/Logger';
-import { WhatsAppConnector } from '@/modules/whatsapp/infrastructure/WhatsAppConector';
-import { printQR } from '@/infrastructure/runtime/printQR';
-import { processMessage } from '@/modules/whatsapp/application/messageProcessor'
-import { Client } from '@/types/client';
+import { Logger } from "@/infrastructure/logging/Logger";
+import { WhatsAppConnector } from "@/modules/whatsapp/infrastructure/WhatsAppConector";
+import { printQR } from "@/infrastructure/runtime/printQR";
+import { processMessage } from "@/modules/whatsapp/application/messageProcessor";
+import { Client } from "@/types/client";
 
 export default async function server() {
 	const logger = new Logger();
@@ -11,12 +11,12 @@ export default async function server() {
 		createdAt: new Date(),
 		email: "ppozo",
 		id: 22,
-		phone: "123123"
-	}
+		phone: "123123",
+	};
 	// const clients = [cli];
 	// clients.forEach((session: Client) => {
 	// 	logger.info("conectando")
-	const connector = new WhatsAppConnector({
+	/*const connector = new WhatsAppConnector({
 		sessionId: session.name,
 		events: {
 			onQR: (qr) => {
@@ -36,7 +36,7 @@ export default async function server() {
 			},
 		}
 	});
-	connector.connect();
+	connector.connect();*/
 	// })
-	logger.info('Server started');
+	logger.info("Server started");
 }

@@ -1,16 +1,44 @@
-import { agentRepo } from "@/infrastructure/database/repositories";
+import {
+	agentRepo,
+	providerRepo,
+	sessionRepo,
+} from "@/infrastructure/database/repositories";
 import { CreateAgentDTO, UpdateAgentDTO } from "../validators";
 import { Agent } from "@/infrastructure/database/types/agent.type";
+import { WhatsAppConnector } from "@/modules/whatsapp/infrastructure/WhatsAppConector";
+import { printQR } from "@/infrastructure/runtime/printQR";
 
 export class AgentService {
 	public async create(userId: string, data: CreateAgentDTO): Promise<Agent> {
 		return agentRepo.create(data.name, data.description, userId);
 	}
 
-	public async connect(query, params): Promise<void> {
+	public async connect(query, params, res: Response): Promise<void> {
 		const type = query.type;
 		const id = params.id_agent;
 		if (type == "whatsapp") {
+			const provider = await providerRepo.findByName("whatsapp");
+			const session = await sessionRepo.create(id, provider.id);
+			console.log(session);
+			const conector = new WhatsAppConnector({
+				sessionId: session.id,
+				events: {
+					onQR: (qr) => {
+						//retornar el qr
+						printQR(qr);
+						res.json({
+							message: "Qr Generated",
+							data: qr,
+						});
+						res.end();
+					},
+					onConnected: () => {
+						sessionRepo.updateStatus(session.id, "C");
+						console.log("ERRRRR");
+					},
+				},
+			});
+			conector.connect();
 		}
 		console.log(type, id);
 	}

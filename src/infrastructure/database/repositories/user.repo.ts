@@ -5,10 +5,7 @@ import { User } from "../types/user.type";
 import { randomUUID } from "crypto";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
-export class UserRepository extends BaseRepository<
-	typeof users,
-	string
-> {
+export class UserRepository extends BaseRepository<typeof users, string> {
 	constructor(dbInstance: PostgresJsDatabase<any>) {
 		super(dbInstance, users, users.id);
 	}
@@ -23,7 +20,6 @@ export class UserRepository extends BaseRepository<
 		return result[0] ?? null;
 	}
 
-
 	async findByUsername(username: string): Promise<User | null> {
 		const result = await this.db
 			.select()
@@ -34,7 +30,11 @@ export class UserRepository extends BaseRepository<
 		return result[0] ?? null;
 	}
 
-	async create(username: string, email: string, password: string): Promise<User> {
+	async create(
+		username: string,
+		email: string,
+		password: string,
+	): Promise<User> {
 		const id = randomUUID();
 		await this.db.insert(users).values({
 			id,
@@ -50,5 +50,4 @@ export class UserRepository extends BaseRepository<
 
 		return created;
 	}
-
 }
