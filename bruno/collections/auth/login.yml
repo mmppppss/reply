@@ -10,9 +10,8 @@ http:
     type: json
     data: |-
       {
-        "username": "admin",
-        "password":"mps",
-        "email":"me@mpps.qzz.io"
+        "username": "ana",
+        "password":"ana12345"
       }
   auth: inherit
 

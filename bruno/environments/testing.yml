@@ -5,4 +5,6 @@ variables:
   - name: url
     value: http://localhost:3000
   - name: id_user
-    value: 3a54d87a-d070-4b1a-8caa-8e9a86ec6b83
+    value: 0380b783-7b62-4af7-b5dc-b1da0b3299b4
+  - name: id_agent
+    value: cc7cab97-451a-47a7-b6ef-2be4149905a4
