@@ -14,7 +14,7 @@
 	"license": "ISC",
 	"packageManager": "pnpm@10.32.1",
 	"dependencies": {
-		"baileys": "7.0.0-rc.9",
+		"@whiskeysockets/baileys": "^6.7.9",
 		"bcrypt": "^6.0.0",
 		"cors": "^2.8.6",
 		"drizzle-orm": "^0.45.1",

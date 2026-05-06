@@ -10,7 +10,7 @@ export class AgentController {
 
 	public create = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const userId = req.params.id_user as string || (req as any).user?.id;
+			const userId = (req.params.id_user as string) || (req as any).user?.id;
 
 			if (!userId) {
 				return res.status(401).json({ message: "User not authenticated" });
@@ -19,18 +19,32 @@ export class AgentController {
 			const result = await this.agentService.create(userId, req.body);
 			return res.status(201).json({
 				message: "Agent created successfully",
-				data: result
+				data: result,
 			});
 		} catch (error: any) {
 			return res.status(400).json({
-				message: error.message || "Error creating agent"
+				message: error.message || "Error creating agent",
+			});
+		}
+	};
+
+	public connect = async (req: Request, res: Response): Promise<Response> => {
+		try {
+			const result = await this.agentService.connect(
+				req.query,
+				req.params,
+				res,
+			);
+		} catch (error: any) {
+			return res.status(400).json({
+				message: error.message || "Error creating agent",
 			});
 		}
 	};
 
 	public getAll = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const userId = req.params.id_user as string || (req as any).user?.id;
+			const userId = (req.params.id_user as string) || (req as any).user?.id;
 
 			if (!userId) {
 				return res.status(401).json({ message: "User not authenticated" });
@@ -38,19 +52,19 @@ export class AgentController {
 
 			const agents = await this.agentService.findAllByUser(userId);
 			return res.status(200).json({
-				data: agents
+				data: agents,
 			});
 		} catch (error: any) {
 			return res.status(400).json({
-				message: error.message || "Error fetching agents"
+				message: error.message || "Error fetching agents",
 			});
 		}
 	};
 
 	public getById = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const userId = req.params.id_user as string || (req as any).user?.id;
-			const agentId = req.params.agentId as string;
+			const userId = (req.params.id_user as string) || (req as any).user?.id;
+			const agentId = req.params.id_agent as string;
 
 			if (!userId) {
 				return res.status(401).json({ message: "User not authenticated" });
@@ -58,19 +72,19 @@ export class AgentController {
 
 			const agent = await this.agentService.findById(agentId, userId);
 			return res.status(200).json({
-				data: agent
+				data: agent,
 			});
 		} catch (error: any) {
 			return res.status(404).json({
-				message: error.message || "Agent not found"
+				message: error.message || "Agent not found",
 			});
 		}
 	};
 
 	public update = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const userId = req.params.id_user as string || (req as any).user?.id;
-			const agentId = req.params.agentId as string;
+			const userId = (req.params.id_user as string) || (req as any).user?.id;
+			const agentId = req.params.id_agent as string;
 
 			if (!userId) {
 				return res.status(401).json({ message: "User not authenticated" });
@@ -79,19 +93,19 @@ export class AgentController {
 			const result = await this.agentService.update(agentId, userId, req.body);
 			return res.status(200).json({
 				message: "Agent updated successfully",
-				data: result
+				data: result,
 			});
 		} catch (error: any) {
 			return res.status(400).json({
-				message: error.message || "Error updating agent"
+				message: error.message || "Error updating agent",
 			});
 		}
 	};
 
 	public delete = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const userId = req.params.id_user as string || (req as any).user?.id;
-			const agentId = req.params.agentId as string;
+			const userId = (req.params.id_user as string) || (req as any).user?.id;
+			const agentId = req.params.id_agent as string;
 
 			if (!userId) {
 				return res.status(401).json({ message: "User not authenticated" });
@@ -99,11 +113,11 @@ export class AgentController {
 
 			await this.agentService.delete(agentId, userId);
 			return res.status(200).json({
-				message: "Agent deleted successfully"
+				message: "Agent deleted successfully",
 			});
 		} catch (error: any) {
 			return res.status(400).json({
-				message: error.message || "Error deleting agent"
+				message: error.message || "Error deleting agent",
 			});
 		}
 	};

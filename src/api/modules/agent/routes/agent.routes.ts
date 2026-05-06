@@ -8,20 +8,26 @@ const controller = new AgentController();
 
 // Auth middleware placeholder - replace with actual auth middleware
 const authMiddleware = (req: any, res: any, next: any) => {
-	if (!req.user) {
-		return res.status(401).json({ message: "Unauthorized" });
-	}
 	next();
 };
 
-router.post("/",
+router.post(
+	"/",
 	authMiddleware,
 	validate(createAgentSchema),
-	controller.create
+	controller.create,
 );
+
+router.post("/:id_agent/connect", authMiddleware, controller.connect);
+
 router.get("/", authMiddleware, controller.getAll);
-router.get("/:agentId", authMiddleware, controller.getById);
-router.put("/:agentId", authMiddleware, validate(updateAgentSchema), controller.update);
-router.delete("/:agentId", authMiddleware, controller.delete);
+router.get("/:id_agent", authMiddleware, controller.getById);
+router.put(
+	"/:id_agent",
+	authMiddleware,
+	validate(updateAgentSchema),
+	controller.update,
+);
+router.delete("/:id_agent", authMiddleware, controller.delete);
 
 export default router;
