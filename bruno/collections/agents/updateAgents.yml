@@ -1,0 +1,22 @@
+info:
+  name: updateAgents
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}"
+  body:
+    type: json
+    data: |-
+      {
+        "name":"Ingenieria Informatica",
+        "description":"Canal de atencion automatizado de la carrera ingenieria informatica fich"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

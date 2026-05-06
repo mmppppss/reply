@@ -1,0 +1,20 @@
+info:
+  name: deleteAgentById
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}"
+  auth: inherit
+
+runtime:
+  variables:
+    - name: id_agent
+      value: cc7cab97-451a-47a7-b6ef-2be4149905a4
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

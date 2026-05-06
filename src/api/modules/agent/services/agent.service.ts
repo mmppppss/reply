@@ -7,6 +7,14 @@ export class AgentService {
 		return agentRepo.create(data.name, data.description, userId);
 	}
 
+	public async connect(query, params): Promise<void> {
+		const type = query.type;
+		const id = params.id_agent;
+		if (type == "whatsapp") {
+		}
+		console.log(type, id);
+	}
+
 	public async findAllByUser(userId: string): Promise<Agent[]> {
 		return agentRepo.findByUserId(userId);
 	}
@@ -25,12 +33,17 @@ export class AgentService {
 		return agent;
 	}
 
-	public async update(id: string, userId: string, data: UpdateAgentDTO): Promise<Agent> {
+	public async update(
+		id: string,
+		userId: string,
+		data: UpdateAgentDTO,
+	): Promise<Agent> {
 		const agent = await this.findById(id, userId);
 
 		const updateData: Partial<Agent> = {};
 		if (data.name !== undefined) updateData.name = data.name;
-		if (data.description !== undefined) updateData.description = data.description;
+		if (data.description !== undefined)
+			updateData.description = data.description;
 
 		return agentRepo.update(id, updateData);
 	}

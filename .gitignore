@@ -142,3 +142,5 @@ vite.config.ts.timestamp-*
 sessions
 sessions/
 ./src/database/index.ts
+
+data
