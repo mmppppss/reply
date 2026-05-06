@@ -23,12 +23,12 @@ jobs:
             git pull origin main
             
             echo "dependencias..."
-            pnpm install --frozen-lockfile
+            npm install
             
             echo "build..."
-            pnpm build
+            npm run build
             
             echo "PM2..."
-            pm2 reload reply || pm2 start "pnpm start" --name reply
+            pm2 reload reply || pm2 start "npm start" --name reply
             
             pm2 save
