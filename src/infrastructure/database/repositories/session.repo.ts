@@ -35,6 +35,15 @@ export class SessionRepository extends BaseRepository<typeof sessions, string> {
 		return session ?? null;
 	}
 
+	async findByStatus(status: string): Promise<any> {
+		const session = await this.db
+			.select()
+			.from(sessions)
+			.where(eq(sessions.status, status));
+
+		return session ?? null;
+	}
+
 	async updateStatus(id: string, status: string): Promise<void> {
 		await this.db
 			.update(sessions)
