@@ -6,6 +6,7 @@ import {
 import { CreateAgentDTO, UpdateAgentDTO } from "../validators";
 import { Agent } from "@/infrastructure/database/types/agent.type";
 import { WhatsAppConnector } from "@/modules/whatsapp/infrastructure/WhatsAppConector";
+import { BotManager } from "@/modules/whatsapp/application/BotManager";
 import { printQR } from "@/infrastructure/runtime/printQR";
 
 export class AgentService {
@@ -19,28 +20,21 @@ export class AgentService {
 		if (type == "whatsapp") {
 			const provider = await providerRepo.findByName("whatsapp");
 			const session = await sessionRepo.create(id, provider.id);
-			console.log(session);
-			const conector = new WhatsAppConnector({
-				sessionId: session.id,
-				events: {
-					onQR: (qr) => {
-						//retornar el qr
-						printQR(qr);
-						res.json({
-							message: "Qr Generated",
-							data: qr,
-						});
-						res.end();
-					},
-					onConnected: () => {
-						sessionRepo.updateStatus(session.id, "C");
-						console.log("ERRRRR");
-					},
+			const botManager = BotManager.getInstance();
+			await botManager.start(session.id, {
+				onQR: (qr) => {
+					printQR(qr);
+					res.json({
+						message: "Qr Generated",
+						data: qr,
+					});
+					res.end();
+				},
+				onConnected: () => {
+					sessionRepo.updateStatus(session.id, "C");
 				},
 			});
-			conector.connect();
 		}
-		console.log(type, id);
 	}
 
 	public async findAllByUser(userId: string): Promise<Agent[]> {
@@ -79,5 +73,22 @@ export class AgentService {
 	public async delete(id: string, userId: string): Promise<void> {
 		await this.findById(id, userId);
 		await agentRepo.deleteById(id);
+	}
+
+	public async sendMessage(
+		agentId: string,
+		userId: string,
+		to: string,
+		text: string,
+	): Promise<{ success: boolean; messageId?: string; error?: string }> {
+		await this.findById(agentId, userId);
+		const sessions = await sessionRepo.findByAgentId(agentId);
+
+		if (!sessions || sessions.length === 0) {
+			return { success: false, error: "No session found for this agent" };
+		}
+
+		const botManager = BotManager.getInstance();
+		return botManager.sendMessage(sessions[0].id, to, text);
 	}
 }

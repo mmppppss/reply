@@ -1,0 +1,24 @@
+info:
+  name: sendMessage
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}/connect?type=whatsapp"
+  params:
+    - name: type
+      value: whatsapp
+      type: query
+  auth: inherit
+
+runtime:
+  variables:
+    - name: id_agent
+      value: cc7cab97-451a-47a7-b6ef-2be4149905a4
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

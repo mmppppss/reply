@@ -121,4 +121,42 @@ export class AgentController {
 			});
 		}
 	};
+
+	public send = async (req: Request, res: Response): Promise<Response> => {
+		try {
+			const userId = (req.params.id_user as string) || (req as any).user?.id;
+			const agentId = req.params.id_agent as string;
+			const { to, text } = req.body;
+
+			if (!userId) {
+				return res.status(401).json({ message: "User not authenticated" });
+			}
+
+			if (!to || !text) {
+				return res.status(400).json({ message: "to and text are required" });
+			}
+
+			const result = await this.agentService.sendMessage(
+				agentId,
+				userId,
+				to,
+				text,
+			);
+
+			if (!result.success) {
+				return res.status(400).json({
+					message: result.error,
+				});
+			}
+
+			return res.status(200).json({
+				message: "Message sent",
+				data: result,
+			});
+		} catch (error: any) {
+			return res.status(400).json({
+				message: error.message || "Error sending message",
+			});
+		}
+	};
 }

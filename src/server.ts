@@ -1,18 +1,19 @@
 import { Logger } from "@/infrastructure/logging/Logger";
-import { WhatsAppConnector } from "@/modules/whatsapp/infrastructure/WhatsAppConector";
 import { printQR } from "@/infrastructure/runtime/printQR";
 import { processMessage } from "@/modules/whatsapp/application/messageProcessor";
+import { BotManager } from "@/modules/whatsapp/application/BotManager";
 import { sessionRepo } from "./infrastructure/database/repositories";
 import { Session } from "./infrastructure/database/types/session.type";
 
 export default async function server() {
 	const logger = new Logger();
 	const sessions = await sessionRepo.findByStatus("C");
-	sessions.forEach((session: Session) => {
-		logger.info("conectando");
-		const connector = new WhatsAppConnector({
-			sessionId: session.id,
-			events: {
+	const botManager = BotManager.getInstance();
+
+	await Promise.all(
+		sessions.map((session: Session) => {
+			logger.info("conectando", { botId: session.id });
+			return botManager.start(session.id, {
 				onQR: (qr) => {
 					logger.info("QR", { botId: session.id });
 					printQR(qr);
@@ -28,11 +29,11 @@ export default async function server() {
 					logger.info(`WhatsApp desconectado ${reason}`, {
 						botId: session.id,
 					});
-					connector.connect();
+					botManager.start(session.id);
 				},
-			},
-		});
-		connector.connect();
-	});
+			});
+		}),
+	);
+
 	logger.info("Server started");
 }

@@ -30,4 +30,6 @@ router.put(
 );
 router.delete("/:id_agent", authMiddleware, controller.delete);
 
+router.post("/:id_agent/send", authMiddleware, controller.send);
+
 export default router;
