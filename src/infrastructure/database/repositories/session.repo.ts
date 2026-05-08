@@ -10,11 +10,11 @@ export class SessionRepository extends BaseRepository<typeof sessions, string> {
 		super(dbInstance, sessions, sessions.id);
 	}
 
-	async create(idUser: string, idProvider?: string): Promise<any> {
+	async create(idAgent: string, idProvider?: string): Promise<any> {
 		const id = randomUUID();
 		await this.db.insert(sessions).values({
 			id,
-			idUser,
+			idAgent,
 			idProvider,
 		});
 

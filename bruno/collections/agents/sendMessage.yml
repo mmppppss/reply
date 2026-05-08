@@ -5,11 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}/connect?type=whatsapp"
-  params:
-    - name: type
-      value: whatsapp
-      type: query
+  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}/send"
   auth: inherit
 
 runtime:
