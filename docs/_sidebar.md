@@ -4,3 +4,5 @@
   * [Auth](api/auth/README.md)
   * [CheckHealt](api/check/README.md)
   * [User](api/user/README.md)
+  * [Agents](api/agents/README.md)
+  * [Responses](api/responses/README.md)

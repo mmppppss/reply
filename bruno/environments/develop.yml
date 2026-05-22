@@ -3,6 +3,6 @@ variables:
   - name: token_jwt
     value: ""
   - name: url
-    value: http://softproject.qzz.io:3000
+    value: http://api.softproject.qzz.io
   - name: id_user
     value: 3a54d87a-d070-4b1a-8caa-8e9a86ec6b83
