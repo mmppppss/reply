@@ -1,0 +1,27 @@
+info:
+  name: createResponse
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{url}}/api/v1/agents/{{id_agent}}/responses"
+  body:
+    type: json
+    data: |-
+      {
+        "keyword": "hola",
+        "response": "Hola! Como puedo ayudarte?"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: id_agent
+      value: 91f76f63-5bde-4aa9-837a-f6bccab6d624
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

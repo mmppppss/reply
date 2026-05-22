@@ -14,6 +14,8 @@ collections:
     path: "collections/whatsapp"
   - name: "agents"
     path: "collections/agents"
+  - name: "responses"
+    path: "collections/responses"
 
 specs:
 

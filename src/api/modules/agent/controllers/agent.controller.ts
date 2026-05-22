@@ -33,11 +33,14 @@ export class AgentController {
 			const result = await this.agentService.connect(
 				req.query,
 				req.params,
-				res,
+				req.body,
 			);
+			return res.status(200).json(result);
 		} catch (error: any) {
+			const cause = error.cause?.message || error.cause || "";
 			return res.status(400).json({
-				message: error.message || "Error creating agent",
+				message: error.message || "Error connecting agent",
+				...(cause ? { cause } : {}),
 			});
 		}
 	};

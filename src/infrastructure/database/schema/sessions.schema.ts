@@ -1,4 +1,4 @@
-import { pgTable, timestamp, uuid, char } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, uuid, char, jsonb } from "drizzle-orm/pg-core";
 import { agents } from "./agents.schema";
 import { providers } from "./providers.schema";
 
@@ -7,6 +7,7 @@ export const sessions = pgTable("sessions", {
 	idAgent: uuid("id_agent").references(() => agents.id),
 	idProvider: uuid("id_provider").references(() => providers.id),
 	status: char("status", { length: 1 }).notNull().default("P"),
+	config: jsonb("config").$type<Record<string, any>>().default({}),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

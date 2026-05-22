@@ -15,7 +15,8 @@ esbuild.build({
 	external: [
 		"bcrypt",
 		"mysql2",
-		"jsonwebtoken"
+		"jsonwebtoken",
+		"telegraf"
 	],
 	minify: true,
 }).catch(() => process.exit(1));

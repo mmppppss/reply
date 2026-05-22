@@ -3,37 +3,25 @@ import makeWASocket, {
 	useMultiFileAuthState,
 	WASocket,
 	proto,
-	isJidGroup,
 	fetchLatestBaileysVersion,
 } from "@whiskeysockets/baileys";
 import { Boom } from "@hapi/boom";
 import path from "path";
 import fs from "fs";
 import pino from "pino";
-
-export interface WhatsAppConnectorEvents {
-	onQR?: (qr: string) => void;
-	onMessage?: (message: proto.IWebMessageInfo) => void;
-	onConnected?: () => void;
-	onDisconnected?: (
-		reason: DisconnectReason | undefined,
-		error?: string,
-	) => void;
-	onConnectionStatus?: (
-		status: "disconnected" | "connecting" | "connected",
-	) => void;
-}
+import { BotEvents, IBotConnector } from "@/modules/shared/domain/IBotConnector";
 
 export interface WhatsAppConnectorOptions {
 	sessionId: string;
-	events?: WhatsAppConnectorEvents;
+	events?: BotEvents;
 	authDir?: string;
 }
 
-export class WhatsAppConnector {
+export class WhatsAppConnector implements IBotConnector {
+	readonly sessionId: string;
+	readonly platform = "whatsapp";
 	private client: WASocket | null = null;
-	private readonly sessionId: string;
-	private readonly events?: WhatsAppConnectorEvents;
+	private events: BotEvents | undefined;
 	private readonly authDir: string;
 	private connectionStatus: "disconnected" | "connecting" | "connected" =
 		"disconnected";
@@ -50,7 +38,9 @@ export class WhatsAppConnector {
 			path.join(process.cwd(), "data", "auth", options.sessionId);
 	}
 
-	async connect(): Promise<void> {
+	async connect(events?: BotEvents): Promise<void> {
+		if (events) this.events = events;
+
 		if (this.initPromise) {
 			return this.initPromise;
 		}
@@ -208,10 +198,13 @@ export class WhatsAppConnector {
 				text: content,
 			});
 
-			return {
+			const response: { success: boolean; messageId?: string } = {
 				success: true,
-				messageId: result?.key?.id || undefined,
 			};
+			if (result?.key?.id) {
+				response.messageId = result.key.id;
+			}
+			return response;
 		} catch (error) {
 			return {
 				success: false,
@@ -231,7 +224,7 @@ export class WhatsAppConnector {
 		return this.qrCode;
 	}
 
-	async logout(): Promise<void> {
+	async disconnect(): Promise<void> {
 		if (this.client) {
 			try {
 				await this.client.logout();
@@ -254,11 +247,5 @@ export class WhatsAppConnector {
 		} catch (e) {
 			// Ignore error
 		}
-	}
-
-	disconnect(): void {
-		this.client?.end(undefined);
-		this.client = null;
-		this.connectionStatus = "disconnected";
 	}
 }

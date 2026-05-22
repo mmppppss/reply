@@ -1,0 +1,30 @@
+info:
+  name: connectAgent
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}/connect?type=telegram"
+  params:
+    - name: type
+      value: telegram
+      type: query
+  body:
+    type: json
+    data: |-
+      {
+        "token":"8358356238:AAGt_fjOT4-p-cvyL51pLpUEYa1mltmGhZs"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: id_agent
+      value: 91f76f63-5bde-4aa9-837a-f6bccab6d624
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

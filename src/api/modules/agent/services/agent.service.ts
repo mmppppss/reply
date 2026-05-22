@@ -5,7 +5,6 @@ import {
 } from "@/infrastructure/database/repositories";
 import { CreateAgentDTO, UpdateAgentDTO } from "../validators";
 import { Agent } from "@/infrastructure/database/types/agent.type";
-import { WhatsAppConnector } from "@/modules/whatsapp/infrastructure/WhatsAppConector";
 import { BotManager } from "@/modules/whatsapp/application/BotManager";
 import { printQR } from "@/infrastructure/runtime/printQR";
 
@@ -14,27 +13,64 @@ export class AgentService {
 		return agentRepo.create(data.name, data.description, userId);
 	}
 
-	public async connect(query, params, res: Response): Promise<void> {
-		const type = query.type;
-		const id = params.id_agent;
-		if (type == "whatsapp") {
+	public async connect(
+		query: Record<string, any>,
+		params: Record<string, any>,
+		body: Record<string, any>,
+	): Promise<any> {
+		const type = query.type as string;
+		const id = params.id_agent as string;
+		const token = body?.token as string | undefined;
+
+		if (type === "whatsapp") {
 			const provider = await providerRepo.findByName("whatsapp");
 			const session = await sessionRepo.create(id, provider.id);
 			const botManager = BotManager.getInstance();
-			await botManager.start(session.id, {
-				onQR: (qr) => {
-					printQR(qr);
-					res.json({
-						message: "Qr Generated",
-						data: qr,
-					});
-					res.end();
-				},
+
+			return new Promise((resolve, reject) => {
+				const timeout = setTimeout(() => {
+					reject(new Error("QR generation timeout"));
+				}, 30000);
+
+				botManager.start(session.id, type, {
+					onQR: (qr) => {
+						clearTimeout(timeout);
+						printQR(qr);
+						resolve({ message: "Qr Generated", data: qr, sessionId: session.id });
+					},
+					onConnected: () => {
+						clearTimeout(timeout);
+						sessionRepo.updateStatus(session.id, "C");
+						resolve({ message: "WhatsApp connected", sessionId: session.id });
+					},
+					onDisconnected: (_reason, error) => {
+						clearTimeout(timeout);
+						reject(new Error(error || "WhatsApp connection failed"));
+					},
+				}).catch(reject);
+			});
+		}
+
+		if (type === "telegram") {
+			if (!token) {
+				throw new Error("Telegram token is required");
+			}
+			const provider = await providerRepo.findByName("telegram");
+			const session = await sessionRepo.create(id, provider.id);
+			await sessionRepo.updateConfig(session.id, { token });
+			const botManager = BotManager.getInstance();
+			await botManager.start(session.id, type, {
 				onConnected: () => {
 					sessionRepo.updateStatus(session.id, "C");
 				},
-			});
+				onDisconnected: (_reason, error) => {
+					console.error(`Telegram bot disconnected: ${error}`);
+				},
+			}, { token });
+			return { sessionId: session.id, message: "Telegram bot connected" };
 		}
+
+		throw new Error(`Unsupported provider type: ${type}`);
 	}
 
 	public async findAllByUser(userId: string): Promise<Agent[]> {

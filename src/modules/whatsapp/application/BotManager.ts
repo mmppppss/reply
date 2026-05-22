@@ -1,8 +1,10 @@
-import { WhatsAppConnector, WhatsAppConnectorEvents } from "../infrastructure/WhatsAppConector";
+import { IBotConnector, BotEvents } from "@/modules/shared/domain/IBotConnector";
+import { WhatsAppConnector } from "../infrastructure/WhatsAppConector";
+import { TelegramConnector } from "@/modules/telegram/infrastructure/TelegramConnector";
 
 export class BotManager {
 	private static instance: BotManager;
-	private bots: Map<string, WhatsAppConnector> = new Map();
+	private bots: Map<string, IBotConnector> = new Map();
 
 	private constructor() {}
 
@@ -13,15 +15,33 @@ export class BotManager {
 		return BotManager.instance;
 	}
 
-	async start(sessionId: string, events?: WhatsAppConnectorEvents): Promise<WhatsAppConnector> {
+	async start(
+		sessionId: string,
+		provider: string,
+		events?: BotEvents,
+		config?: Record<string, any>,
+	): Promise<IBotConnector> {
 		const existing = this.bots.get(sessionId);
 		if (existing) {
 			return existing;
 		}
 
-		const connector = new WhatsAppConnector({ sessionId, events });
+		let connector: IBotConnector;
+
+		if (provider === "whatsapp") {
+			connector = new WhatsAppConnector({ sessionId, events: events! });
+		} else if (provider === "telegram") {
+			const token = config?.token;
+			if (!token) {
+				throw new Error("Telegram token is required");
+			}
+			connector = new TelegramConnector({ sessionId, token, events: events! });
+		} else {
+			throw new Error(`Unsupported provider: ${provider}`);
+		}
+
 		this.bots.set(sessionId, connector);
-		await connector.connect();
+		await connector.connect(events);
 		return connector;
 	}
 
@@ -29,23 +49,23 @@ export class BotManager {
 		const connector = this.bots.get(sessionId);
 		if (!connector) return;
 
-		await connector.logout();
+		await connector.disconnect();
 		this.bots.delete(sessionId);
 	}
 
 	async sendMessage(
 		sessionId: string,
-		jid: string,
+		destination: string,
 		text: string,
 	): Promise<{ success: boolean; messageId?: string; error?: string }> {
 		const connector = this.bots.get(sessionId);
 		if (!connector) {
 			return { success: false, error: "Bot not found or not started" };
 		}
-		return connector.sendMessage(jid, text);
+		return connector.sendMessage(destination, text);
 	}
 
-	getConnector(sessionId: string): WhatsAppConnector | undefined {
+	getConnector(sessionId: string): IBotConnector | undefined {
 		return this.bots.get(sessionId);
 	}
 
@@ -53,7 +73,7 @@ export class BotManager {
 		return this.bots.get(sessionId)?.getConnectionStatus() ?? null;
 	}
 
-	getAllBots(): Map<string, WhatsAppConnector> {
+	getAllBots(): Map<string, IBotConnector> {
 		return this.bots;
 	}
 }

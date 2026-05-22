@@ -5,6 +5,7 @@ import helmet from "helmet";
 import authRoutes from "./modules/auth/routes/auth.routes";
 import userRoutes from "./modules/user/routes/user.routes";
 import agentRoutes from "./modules/agent/routes/agent.routes";
+import responseRoutes from "./modules/agent/routes/response.routes";
 
 const app: Express = express();
 
@@ -27,5 +28,6 @@ app.use(router);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/user/:id_user/agents", agentRoutes);
+app.use("/api/v1/agents/:id_agent/responses", responseRoutes);
 
 export default app;
