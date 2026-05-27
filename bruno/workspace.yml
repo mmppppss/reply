@@ -18,6 +18,12 @@ collections:
     path: "collections/responses"
   - name: "module"
     path: "collections/module"
+  - name: "config"
+    path: "collections/config"
+  - name: "messages"
+    path: "collections/messages"
+  - name: "contacts"
+    path: "collections/contacts"
 
 specs:
 

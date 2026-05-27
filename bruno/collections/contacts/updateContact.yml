@@ -1,17 +1,18 @@
 info:
-  name: sendMessage
+  name: updateContact
   type: http
-  seq: 7
+  seq: 4
 
 http:
-  method: POST
-  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}/send"
+  method: PUT
+  url: "{{url}}/api/v1/agents/{{id_agent}}/contacts/{{contact_id}}"
   body:
     type: json
     data: |-
       {
-        "to":"59171688979",
-        "text":"hola que tal"
+        "name": "Juan Carlos Perez",
+        "platform": "whatsapp",
+        "chatType": "private"
       }
   auth: inherit
 
@@ -19,6 +20,8 @@ runtime:
   variables:
     - name: id_agent
       value: 91f76f63-5bde-4aa9-837a-f6bccab6d624
+    - name: contact_id
+      value: "52123456789"
 
 settings:
   encodeUrl: true

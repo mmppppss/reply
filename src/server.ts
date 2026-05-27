@@ -33,11 +33,17 @@ export default async function server() {
 						logger.info("WhatsApp conectado", { botId: session.id });
 					},
 					onMessage: (msg) => {
+						if (msg.key?.fromMe) return;
 						const message = processMessage(msg);
 						const text = message?.text;
 						logger.info(JSON.stringify(text), { botId: session.id });
 						if (text && session.idAgent) {
-							moduleRegistry.process(session.idAgent, text, session.id, message!.fromJid);
+							const chatJid = msg.key.remoteJid;
+							const isGroup = message!.isGroup;
+							const fromJid = isGroup ? msg.key.participant : chatJid;
+							const chatType = isGroup ? "group" : "private";
+							moduleRegistry.process(session.idAgent, text, session.id, chatJid, fromJid, chatType, chatJid)
+							.catch(err => logger.error("WhatsApp process error", err instanceof Error ? err : new Error(String(err)), { botId: session.id }));
 						}
 					},
 					onDisconnected(reason) {
@@ -60,7 +66,9 @@ export default async function server() {
 						const groupInfo = msg.isGroup ? " [grupo]" : "";
 						logger.info(`Telegram${groupInfo} de:${msg.from} chat:${msg.chatId} texto:${text}`, { botId: session.id });
 						if (text && session.idAgent) {
-							moduleRegistry.process(session.idAgent, text, session.id, msg.chatId);
+							const chatType = msg.isGroup ? "group" : "private";
+							moduleRegistry.process(session.idAgent, text, session.id, msg.chatId, msg.from, chatType, msg.chatId)
+								.catch(err => logger.error("Telegram process error", err instanceof Error ? err : new Error(String(err)), { botId: session.id }));
 						}
 					},
 					onDisconnected(_reason, error) {

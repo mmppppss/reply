@@ -1,8 +1,8 @@
 # Responses (Auto-Reply)
 
-Reglas de respuesta automatica. Cuando un mensaje entrante contiene una `keyword`, el bot responde automaticamente con el `response` preconfigurado.
+Reglas de respuesta automatica. Cuando un mensaje entrante contiene una `keyword`, el modulo **Keyword** (priority 0) responde automaticamente con el `response` preconfigurado.
 
-El motor de inferencia (`InferenceEngine`) precarga todas las reglas en memoria al iniciar el servidor, evitando llamadas a la base de datos por cada mensaje.
+Las reglas se precargan en memoria al iniciar el servidor y se recargan al crear/eliminar una regla.
 
 ## Create Response Rule
 

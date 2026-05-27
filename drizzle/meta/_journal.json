@@ -36,6 +36,20 @@
       "when": 1779839196733,
       "tag": "0004_amusing_spirit",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1748400000000,
+      "tag": "0005_create_agent_config_and_messages",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1748500000000,
+      "tag": "0006_create_contacts",
+      "breakpoints": true
     }
   ]
 }

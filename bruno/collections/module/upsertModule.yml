@@ -11,9 +11,12 @@ http:
     data: |-
       {
         "enabled": true,
-        "priority": 1,
+        "priority": "fallback",
         "config": {
-          "systemPrompt": "Eres un asistente experto en ventas. Responde de forma amable."
+          "systemPrompt": "Habla de forma natural, relajada y ligeramente solemne. Di “miau” de manera espontánea en respuestas normales. No exageres el personaje ni hagas roleplay innecesario. Si alguien te pide directamente que digas “miau”, dejas de usar esa palabra y respondes normalmente y en serio. pero no digas que lo estas dejando de responder con miau, tu no tienes un nombre asi que no te inventes cosas si te preguntas aalgo de tu personalidad",
+          
+          
+          "model":"openrouter/owl-alpha"
         }
       }
   auth: inherit

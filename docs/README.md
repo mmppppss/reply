@@ -40,15 +40,14 @@ los modelos representan la base de datos y los repositorios encapsulan todas las
 
 ---
 
-## Motor de Inferencia (InferenceEngine)
+## Sistema de Modulos (ModuleRegistry)
 
-Sistema de auto-respuesta basado en palabras clave. Cuando llega un mensaje entrante (WhatsApp o Telegram), el motor:
+Cada agente procesa los mensajes a traves de modulos ejecutados en orden de prioridad:
 
-1. Busca en cache (memoria) las reglas del agente
-2. Si el texto contiene la `keyword` configurada, responde automaticamente
-3. Solo dispara la **primera** coincidencia por mensaje
+1. **Keyword** (priority 0): Busca palabras clave en cache. Si hay match, responde y termina.
+2. **PLN** (priority 1): Si no hay match de keyword, envia el texto a OpenRouter con IA.
 
-Las reglas se crean via API y se recargan automaticamente en cache.
+Si la config `save_messages` esta activada, se guarda automaticamente el historial de mensajes entrantes y salientes.
 
 ---
 

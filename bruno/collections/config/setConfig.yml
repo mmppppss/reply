@@ -1,24 +1,28 @@
 info:
-  name: sendMessage
+  name: setConfig
   type: http
-  seq: 7
+  seq: 3
 
 http:
-  method: POST
-  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}/send"
+  method: PUT
+  url: "{{url}}/api/v1/agents/{{id_agent}}/config/{{key}}"
   body:
     type: json
     data: |-
       {
-        "to":"59171688979",
-        "text":"hola que tal"
+        "value": true
       }
+      // KEYS
+      // save_contacts
+      // save_messages
   auth: inherit
 
 runtime:
   variables:
     - name: id_agent
       value: 91f76f63-5bde-4aa9-837a-f6bccab6d624
+    - name: key
+      value: save_contacts
 
 settings:
   encodeUrl: true
