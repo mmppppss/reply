@@ -7,7 +7,9 @@
 		"build": "node build.js",
 		"test": "vitest",
 		"start": "node --env-file=.env dist/index.js",
-		"dev": "node --env-file=.env node_modules/tsx/dist/cli.mjs watch src/index.ts"
+		"dev": "node --env-file=.env node_modules/tsx/dist/cli.mjs watch src/index.ts",
+		"seed": "node --env-file=.env node_modules/tsx/dist/cli.mjs drizzle/seed.ts",
+		"migrate": "drizzle-kit migrate"
 	},
 	"keywords": [],
 	"author": "",

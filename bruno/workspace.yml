@@ -16,6 +16,8 @@ collections:
     path: "collections/agents"
   - name: "responses"
     path: "collections/responses"
+  - name: "module"
+    path: "collections/module"
 
 specs:
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { responseRepo } from "@/infrastructure/database/repositories";
-import { InferenceEngine } from "@/modules/shared/application/InferenceEngine";
+import { KeywordModule } from "@/modules/shared/application/KeywordModule";
 
 export class ResponseController {
 	public create = async (req: Request, res: Response): Promise<Response> => {
@@ -15,7 +15,7 @@ export class ResponseController {
 			}
 
 			const result = await responseRepo.create(agentId, keyword, response);
-			await InferenceEngine.getInstance().reload(agentId);
+			await KeywordModule.getInstance().reload(agentId);
 
 			return res.status(201).json({
 				message: "Response rule created",
@@ -45,7 +45,7 @@ export class ResponseController {
 			const agentId = req.params.id_agent as string;
 			const id = req.params.id_response as string;
 			await responseRepo.deleteById(id);
-			await InferenceEngine.getInstance().reload(agentId);
+			await KeywordModule.getInstance().reload(agentId);
 			return res.status(200).json({ message: "Response rule deleted" });
 		} catch (error: any) {
 			return res.status(400).json({

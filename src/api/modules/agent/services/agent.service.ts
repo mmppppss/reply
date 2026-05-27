@@ -2,6 +2,7 @@ import {
 	agentRepo,
 	providerRepo,
 	sessionRepo,
+	agentModuleRepo,
 } from "@/infrastructure/database/repositories";
 import { CreateAgentDTO, UpdateAgentDTO } from "../validators";
 import { Agent } from "@/infrastructure/database/types/agent.type";
@@ -10,7 +11,20 @@ import { printQR } from "@/infrastructure/runtime/printQR";
 
 export class AgentService {
 	public async create(userId: string, data: CreateAgentDTO): Promise<Agent> {
-		return agentRepo.create(data.name, data.description, userId);
+		const agent = await agentRepo.create(data.name, data.description, userId);
+
+		await agentModuleRepo.upsert(agent.id, "keyword", {
+			enabled: true,
+			priority: 0,
+		});
+
+		await agentModuleRepo.upsert(agent.id, "pln", {
+			enabled: false,
+			priority: 1,
+			config: { systemPrompt: "Eres un asistente útil y amigable." },
+		});
+
+		return agent;
 	}
 
 	public async connect(

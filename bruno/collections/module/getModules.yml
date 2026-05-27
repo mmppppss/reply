@@ -1,0 +1,20 @@
+info:
+  name: getModules
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{url}}/api/v1/agents/{{id_agent}}/modules"
+  auth: inherit
+
+runtime:
+  variables:
+    - name: id_agent
+      value: 91f76f63-5bde-4aa9-837a-f6bccab6d624
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

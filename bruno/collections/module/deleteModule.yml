@@ -1,0 +1,22 @@
+info:
+  name: deleteModule
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: "{{url}}/api/v1/agents/{{id_agent}}/modules/{{module_key}}"
+  auth: inherit
+
+runtime:
+  variables:
+    - name: id_agent
+      value: 91f76f63-5bde-4aa9-837a-f6bccab6d624
+    - name: module_key
+      value: pln
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,32 @@
+info:
+  name: upsertModule
+  type: http
+  seq: 2
+
+http:
+  method: PUT
+  url: "{{url}}/api/v1/agents/{{id_agent}}/modules/{{module_key}}"
+  body:
+    type: json
+    data: |-
+      {
+        "enabled": true,
+        "priority": 1,
+        "config": {
+          "systemPrompt": "Eres un asistente experto en ventas. Responde de forma amable."
+        }
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: id_agent
+      value: 91f76f63-5bde-4aa9-837a-f6bccab6d624
+    - name: module_key
+      value: pln
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -2,7 +2,7 @@ import { Logger } from "@/infrastructure/logging/Logger";
 import { printQR } from "@/infrastructure/runtime/printQR";
 import { processMessage } from "@/modules/whatsapp/application/messageProcessor";
 import { BotManager } from "@/modules/whatsapp/application/BotManager";
-import { InferenceEngine } from "@/modules/shared/application/InferenceEngine";
+import { ModuleRegistry } from "@/modules/shared/application/ModuleRegistry";
 import { sessionRepo, providerRepo } from "./infrastructure/database/repositories";
 import { Session } from "./infrastructure/database/types/session.type";
 
@@ -10,8 +10,7 @@ export default async function server() {
 	const logger = new Logger();
 	const sessions = await sessionRepo.findByStatus("C");
 	const botManager = BotManager.getInstance();
-
-	await InferenceEngine.getInstance().loadAll();
+	const moduleRegistry = ModuleRegistry.getInstance();
 
 	await Promise.all(
 		sessions.map(async (session: Session) => {
@@ -38,7 +37,7 @@ export default async function server() {
 						const text = message?.text;
 						logger.info(JSON.stringify(text), { botId: session.id });
 						if (text && session.idAgent) {
-							InferenceEngine.getInstance().process(session.idAgent, text, session.id, message!.fromJid);
+							moduleRegistry.process(session.idAgent, text, session.id, message!.fromJid);
 						}
 					},
 					onDisconnected(reason) {
@@ -61,7 +60,7 @@ export default async function server() {
 						const groupInfo = msg.isGroup ? " [grupo]" : "";
 						logger.info(`Telegram${groupInfo} de:${msg.from} chat:${msg.chatId} texto:${text}`, { botId: session.id });
 						if (text && session.idAgent) {
-							InferenceEngine.getInstance().process(session.idAgent, text, session.id, msg.chatId);
+							moduleRegistry.process(session.idAgent, text, session.id, msg.chatId);
 						}
 					},
 					onDisconnected(_reason, error) {

@@ -1,1 +1,1 @@
-ALTER TABLE "sessions" ADD COLUMN "config" jsonb DEFAULT '{}'::jsonb;
+ALTER TABLE "sessions" ADD COLUMN IF NOT EXISTS "config" jsonb DEFAULT '{}'::jsonb;
