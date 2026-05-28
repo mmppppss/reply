@@ -10,8 +10,8 @@ http:
     type: json
     data: |-
       {
-        "keyword": "hola",
-        "response": "Hola! Como puedo ayudarte?"
+        "keyword": "info",
+        "response": "hola mundo"
       }
   auth: inherit
 

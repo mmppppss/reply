@@ -5,16 +5,16 @@ info:
 
 http:
   method: POST
-  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}/connect?type=telegram"
+  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}/connect?type=whatsapp"
   params:
     - name: type
-      value: telegram
+      value: whatsapp
       type: query
   body:
     type: json
     data: |-
       {
-        "token":"8358356238:AAGt_fjOT4-p-cvyL51pLpUEYa1mltmGhZs"
+        "token":"8902552126:AAGhjs-yEoLHVSnWmLFiVPU5Hh7exP7R5NI"
       }
   auth: inherit
 

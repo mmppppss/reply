@@ -144,3 +144,4 @@ sessions/
 ./src/database/index.ts
 
 data
+drizzle
