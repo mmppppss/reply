@@ -16,7 +16,10 @@ esbuild.build({
 		"bcrypt",
 		"mysql2",
 		"jsonwebtoken",
-		"telegraf"
+		"telegraf",
+		"jimp",
+		"sharp",
+		"link-preview-js",
 	],
 	minify: true,
 }).catch(() => process.exit(1));
