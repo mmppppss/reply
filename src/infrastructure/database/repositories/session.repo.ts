@@ -62,4 +62,10 @@ export class SessionRepository extends BaseRepository<typeof sessions, string> {
 			})
 			.where(eq(sessions.id, id));
 	}
+
+	async deleteByAgentId(idAgent: string): Promise<void> {
+		await this.db
+			.delete(sessions)
+			.where(eq(sessions.idAgent, idAgent));
+	}
 }

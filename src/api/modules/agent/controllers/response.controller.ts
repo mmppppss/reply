@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { responseRepo } from "@/infrastructure/database/repositories";
+import { ResponseRule } from "@/infrastructure/database/types/response.type";
 import { KeywordModule } from "@/modules/shared/application/KeywordModule";
 
 export class ResponseController {
@@ -36,6 +37,36 @@ export class ResponseController {
 		} catch (error: any) {
 			return res.status(400).json({
 				message: error.message || "Error fetching response rules",
+			});
+		}
+	};
+
+	public update = async (req: Request, res: Response): Promise<Response> => {
+		try {
+			const agentId = req.params.id_agent as string;
+			const id = req.params.id_response as string;
+			const { keyword, response } = req.body;
+
+			if (!keyword && !response) {
+				return res.status(400).json({
+					message: "At least one of keyword or response is required",
+				});
+			}
+
+			const updateData: Partial<Pick<ResponseRule, "keyword" | "response">> = {};
+			if (keyword !== undefined) updateData.keyword = keyword;
+			if (response !== undefined) updateData.response = response;
+
+			const result = await responseRepo.update(id, updateData);
+			await KeywordModule.getInstance().reload(agentId);
+
+			return res.status(200).json({
+				message: "Response rule updated",
+				data: result,
+			});
+		} catch (error: any) {
+			return res.status(400).json({
+				message: error.message || "Error updating response rule",
 			});
 		}
 	};

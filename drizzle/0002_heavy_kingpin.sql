@@ -1,1 +1,0 @@
-ALTER TABLE "sessions" ADD COLUMN IF NOT EXISTS "config" jsonb DEFAULT '{}'::jsonb;

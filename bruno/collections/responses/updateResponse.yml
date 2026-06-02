@@ -1,0 +1,29 @@
+info:
+  name: updateResponse
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{url}}/api/v1/agents/{{id_agent}}/responses/{{id_response}}"
+  body:
+    type: json
+    data: |-
+      {
+        "keyword": "info-actualizado",
+        "response": "respuesta actualizada"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: id_agent
+      value: e32b5a8c-bb85-4db4-bbfa-d0f1334f054c
+    - name: id_response
+      value: b0ae9617-e7a7-49df-b470-df7c8931631a
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

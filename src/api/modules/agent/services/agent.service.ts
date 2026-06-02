@@ -122,6 +122,14 @@ export class AgentService {
 
 	public async delete(id: string, userId: string): Promise<void> {
 		await this.findById(id, userId);
+
+		const sessions = await sessionRepo.findByAgentId(id);
+		const botManager = BotManager.getInstance();
+		for (const session of sessions) {
+			await botManager.stop(session.id).catch(() => {});
+		}
+
+		await sessionRepo.deleteByAgentId(id);
 		await agentRepo.deleteById(id);
 	}
 

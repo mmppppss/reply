@@ -54,6 +54,35 @@ Las reglas se precargan en memoria al iniciar el servidor y se recargan al crear
 
 ---
 
+## Update Response Rule
+
+> PUT
+
+**URL**: `/api/v1/agents/:id_agent/responses/:id_response`
+
+**BODY** (ambos campos opcionales):
+```json
+{
+    "keyword": "nuevo-keyword",
+    "response": "Nuevo mensaje de respuesta"
+}
+```
+
+**RESPONSE**:
+```json
+{
+    "message": "Response rule updated",
+    "data": {
+        "id": "uuid",
+        "idAgent": "91f76f63-...",
+        "keyword": "nuevo-keyword",
+        "response": "Nuevo mensaje de respuesta"
+    }
+}
+```
+
+---
+
 ## Delete Response Rule
 
 > DELETE

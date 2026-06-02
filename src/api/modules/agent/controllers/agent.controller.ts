@@ -24,6 +24,8 @@ export class AgentController {
 		} catch (error: any) {
 			return res.status(400).json({
 				message: error.message || "Error creating agent",
+				detail: error.detail || error.cause?.message || undefined,
+				code: error.code || undefined,
 			});
 		}
 	};
@@ -121,6 +123,8 @@ export class AgentController {
 		} catch (error: any) {
 			return res.status(400).json({
 				message: error.message || "Error deleting agent",
+				detail: error.detail || error.cause?.message || undefined,
+				code: error.code || undefined,
 			});
 		}
 	};

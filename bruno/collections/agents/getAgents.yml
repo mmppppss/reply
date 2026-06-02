@@ -5,8 +5,13 @@ info:
 
 http:
   method: GET
-  url: "{{url}}/api/v1/user/{{id_user}}/agents/"
+  url: "{{url}}/api/v1/user/{{id_user_admin}}/agents/"
   auth: inherit
+
+runtime:
+  variables:
+    - name: id_user_admin
+      value: 74c3d093-dc53-436e-a8a4-6f31a5df9087
 
 settings:
   encodeUrl: true
