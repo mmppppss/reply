@@ -2,7 +2,7 @@ import { contacts } from "../schema/contacts.schema";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { BaseRepository } from "./base.repo";
 import { randomUUID } from "crypto";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, sql } from "drizzle-orm";
 import { Contact } from "../types/contact.type";
 
 export class ContactRepository extends BaseRepository<
@@ -78,47 +78,41 @@ export class ContactRepository extends BaseRepository<
             metadata?: Record<string, any> | null;
         },
     ): Promise<Contact> {
-        const existing = await this.findByAgentAndContactId(agentId, contactId);
-
-        if (existing) {
-            await this.db
-                .update(contacts)
-                .set({
-                    ...(data.name !== undefined ? { name: data.name } : {}),
-                    ...(data.platform !== undefined ? { platform: data.platform } : {}),
-                    ...(data.chatType !== undefined ? { chatType: data.chatType } : {}),
-                    ...(data.metadata !== undefined ? { metadata: data.metadata } : {}),
-                    lastInteractionAt: new Date(),
-                    updatedAt: new Date(),
-                })
-                .where(eq(contacts.id, existing.id));
-
-            const updated = await this.findById(existing.id);
-            if (!updated) {
-                throw new Error("[CONTACT REPO 002] Update failed");
-            }
-            return updated;
-        }
-
         const id = randomUUID();
         const now = new Date();
-        await this.db.insert(contacts).values({
-            id,
-            idAgent: agentId,
-            contactId,
-            name: data.name ?? null,
-            platform: data.platform ?? null,
-            chatType: data.chatType ?? null,
-            firstSeenAt: now,
-            lastInteractionAt: now,
-            metadata: data.metadata ?? null,
-        });
 
-        const created = await this.findById(id);
-        if (!created) {
-            throw new Error("[CONTACT REPO 003] Create failed");
+        const updateData: Record<string, any> = {
+            lastInteractionAt: now,
+            updatedAt: now,
+        };
+        if (data.name !== undefined) updateData.name = data.name;
+        if (data.platform !== undefined) updateData.platform = data.platform;
+        if (data.chatType !== undefined) updateData.chatType = data.chatType;
+        if (data.metadata !== undefined) updateData.metadata = data.metadata;
+
+        await this.db
+            .insert(contacts)
+            .values({
+                id,
+                idAgent: agentId,
+                contactId,
+                name: data.name ?? null,
+                platform: data.platform ?? null,
+                chatType: data.chatType ?? null,
+                firstSeenAt: now,
+                lastInteractionAt: now,
+                metadata: data.metadata ?? null,
+            })
+            .onConflictDoUpdate({
+                target: [contacts.idAgent, contacts.contactId],
+                set: updateData,
+            });
+
+        const result = await this.findByAgentAndContactId(agentId, contactId);
+        if (!result) {
+            throw new Error("[CONTACT REPO 002] Upsert failed");
         }
-        return created;
+        return result;
     }
 
     async update(

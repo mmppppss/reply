@@ -33,22 +33,14 @@ export class ModuleRegistry {
         from?: string,
         chatType?: string,
         chat?: string,
+        platform?: string,
     ): Promise<void> {
         const shouldSaveMessages = await this.shouldSaveMessages(agentId);
         const shouldSaveContacts = await this.shouldSaveContacts(agentId);
 
         if (shouldSaveContacts && from && chatType === "private") {
             try {
-                const existing = await contactRepo.findByAgentAndContactId(agentId, from);
-                if (!existing) {
-                    await contactRepo.create({
-                        idAgent: agentId,
-                        contactId: from,
-                        chatType,
-                    });
-                } else {
-                    await contactRepo.upsert(agentId, from, { chatType });
-                }
+                await contactRepo.upsert(agentId, from, { chatType, platform });
             } catch (err) {
                 console.error(`[ModuleRegistry] Error saving contact:`, err);
             }

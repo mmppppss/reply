@@ -3,10 +3,12 @@ import {
 	providerRepo,
 	sessionRepo,
 	agentModuleRepo,
+	agentConfigRepo,
 } from "@/infrastructure/database/repositories";
 import { CreateAgentDTO, UpdateAgentDTO } from "../validators";
 import { Agent } from "@/infrastructure/database/types/agent.type";
 import { BotManager } from "@/modules/whatsapp/application/BotManager";
+import { handleWhatsAppMessage, handleTelegramMessage } from "@/modules/shared/application/messageHandler";
 import { printQR } from "@/infrastructure/runtime/printQR";
 
 export class AgentService {
@@ -23,6 +25,9 @@ export class AgentService {
 			priority: 1,
 			config: { systemPrompt: "Eres un asistente útil y amigable." },
 		});
+
+		await agentConfigRepo.set(agent.id, "save_messages", false);
+		await agentConfigRepo.set(agent.id, "save_contacts", false);
 
 		return agent;
 	}
@@ -57,6 +62,7 @@ export class AgentService {
 						sessionRepo.updateStatus(session.id, "C");
 						resolve({ message: "WhatsApp connected", sessionId: session.id });
 					},
+					onMessage: (msg) => handleWhatsAppMessage(session, msg),
 					onDisconnected: (_reason, error) => {
 						clearTimeout(timeout);
 						reject(new Error(error || "WhatsApp connection failed"));
@@ -77,6 +83,7 @@ export class AgentService {
 				onConnected: () => {
 					sessionRepo.updateStatus(session.id, "C");
 				},
+				onMessage: (msg) => handleTelegramMessage(session, msg),
 				onDisconnected: (_reason, error) => {
 					console.error(`Telegram bot disconnected: ${error}`);
 				},
