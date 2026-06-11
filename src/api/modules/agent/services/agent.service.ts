@@ -76,7 +76,13 @@ export class AgentService {
 				throw new Error("Telegram token is required");
 			}
 			const provider = await providerRepo.findByName("telegram");
+			if (!provider) {
+				throw new Error("Provider 'telegram' not found in database");
+			}
 			const session = await sessionRepo.create(id, provider.id);
+			if (!session) {
+				throw new Error("Failed to create Telegram session");
+			}
 			await sessionRepo.updateConfig(session.id, { token });
 			const botManager = BotManager.getInstance();
 			await botManager.start(session.id, type, {
