@@ -10,6 +10,7 @@ import agentModuleRoutes from "./modules/agent-module/routes/agent-module.routes
 import agentConfigRoutes from "./modules/agent-config/routes/agent-config.routes";
 import messagesRoutes from "./modules/messages/routes/messages.routes";
 import contactRoutes from "./modules/contacts/routes/contact.routes";
+import knowledgeRoutes from "./modules/knowledge/routes/knowledge.routes";
 
 const app: Express = express();
 
@@ -37,5 +38,6 @@ app.use("/api/v1/agents/:id_agent/modules", agentModuleRoutes);
 app.use("/api/v1/agents/:id_agent/config", agentConfigRoutes);
 app.use("/api/v1/agents/:id_agent/messages", messagesRoutes);
 app.use("/api/v1/agents/:id_agent/contacts", contactRoutes);
+app.use("/api/v1/agents/:id_agent/knowledge", knowledgeRoutes);
 
 export default app;

@@ -1,0 +1,48 @@
+info:
+  name: uploadKnowledge
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{url}}/api/v1/agents/{{id_agent}}/knowledge/upload"
+  body:
+    type: json
+    data: |-
+      {
+        "idAgent": "{{id_agent}}",
+        "data": [
+          {
+            "id": "PROD-001",
+            "nombre": "Laptop XYZ",
+            "descripcion": "Laptop de última generación",
+            "precio": 1000,
+            "stock": 5,
+            "fotos": [],
+            "caracteristicas": [],
+            "etiquetas": []
+          },
+          {
+            "id": "PROD-002",
+            "nombre": "Mouse",
+            "descripcion": "",
+            "precio": 25,
+            "stock": 50,
+            "fotos": [],
+            "caracteristicas": [],
+            "etiquetas": []
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: id_agent
+      value: 234af589-3b13-42fc-a8b9-49c33ba756a4
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

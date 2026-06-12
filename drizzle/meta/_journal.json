@@ -8,6 +8,13 @@
       "when": 1780010080077,
       "tag": "0000_rare_jackal",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781266629792,
+      "tag": "0002_empty_vulture",
+      "breakpoints": true
     }
   ]
 }

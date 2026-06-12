@@ -24,6 +24,8 @@ collections:
     path: "collections/messages"
   - name: "contacts"
     path: "collections/contacts"
+  - name: "knowledge"
+    path: "collections/knowledge"
 
 specs:
 

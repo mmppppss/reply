@@ -1,23 +1,36 @@
 import { IAgentModule } from "@/modules/shared/domain/IAgentModule";
 import { OpenRouterService } from "./services/openRouter.service";
+import { KnowledgeRepository } from "@/infrastructure/database/repositories/knowledge.repo";
 
 export class PlnModule implements IAgentModule {
 	readonly key = "pln";
 	private openRouter: OpenRouterService;
+	private knowledgeRepo: KnowledgeRepository;
 
-	constructor(apiKey: string, defaultModel: string) {
+	constructor(
+		apiKey: string,
+		defaultModel: string,
+		knowledgeRepo: KnowledgeRepository,
+	) {
 		this.openRouter = new OpenRouterService(apiKey, defaultModel);
+		this.knowledgeRepo = knowledgeRepo;
 	}
 
 	async process(
-		_agentId: string,
+		agentId: string,
 		text: string,
 		_sessionId: string,
 		_chatId: string,
 		config: Record<string, any>,
 	): Promise<string | null> {
-		const systemPrompt = (config.systemPrompt as string) ||
+		let systemPrompt = (config.systemPrompt as string) ||
 			"Eres un asistente útil y amigable. Responde de forma clara y concisa.";
+
+		const knowledgeEntry = await this.knowledgeRepo.findByAgentId(agentId);
+		if (knowledgeEntry) {
+			const knowledgeBlock = JSON.stringify(knowledgeEntry.data, null, 2);
+			systemPrompt += `\n\nInformación de contexto disponible:\n${knowledgeBlock}`;
+		}
 
 		const options: Record<string, any> = {};
 		if (config.model) options.model = config.model;
@@ -33,7 +46,6 @@ export class PlnModule implements IAgentModule {
 		);
 
 		console.log(response);
-
 
 		return response;
 	}
