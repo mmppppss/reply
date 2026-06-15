@@ -1,17 +1,21 @@
 info:
-  name: getAgentById
+  name: listLogs
   type: http
-  seq: 3
+  seq: 4
 
 http:
   method: GET
-  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}"
-  auth: inherit
+  url: "{{url}}/api/v1/agents/{{id_agent}}/developer/logs"
+  auth:
+    type: bearer
+    token: "{{token_jwt}}"
 
 runtime:
   variables:
     - name: id_agent
       value: 234af589-3b13-42fc-a8b9-49c33ba756a4
+    - name: jwt_token
+      value: ""
 
 settings:
   encodeUrl: true

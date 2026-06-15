@@ -11,3 +11,4 @@
 - [Config](api/config/README.md)
 - [Messages](api/messages/README.md)
 - [Contacts](api/contacts/README.md)
+- [Developer](api/developer/README.md)

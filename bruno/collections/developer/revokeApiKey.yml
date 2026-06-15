@@ -1,0 +1,26 @@
+info:
+  name: revokeApiKey
+  type: http
+  seq: 3
+
+http:
+  method: DELETE
+  url: "{{url}}/api/v1/agents/{{id_agent}}/developer/keys/{{id_key}}"
+  auth:
+    type: bearer
+    token: "{{token_jwt}}"
+
+runtime:
+  variables:
+    - name: id_agent
+      value: 234af589-3b13-42fc-a8b9-49c33ba756a4
+    - name: id_key
+      value: 86c97e53-d017-4f1e-8504-cae08a08e905
+    - name: jwt_token
+      value: ""
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

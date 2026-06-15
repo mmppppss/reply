@@ -1,17 +1,21 @@
 info:
-  name: getAgentById
+  name: getContactsWithApiKey
   type: http
-  seq: 3
+  seq: 6
 
 http:
   method: GET
-  url: "{{url}}/api/v1/user/{{id_user}}/agents/{{id_agent}}"
-  auth: inherit
+  url: "{{url}}/api/v1/agents/{{id_agent}}/contacts"
+  headers:
+    Authorization: Bearer {{api_key}}
+  auth: none
 
 runtime:
   variables:
     - name: id_agent
       value: 234af589-3b13-42fc-a8b9-49c33ba756a4
+    - name: api_key
+      value: ""
 
 settings:
   encodeUrl: true

@@ -15,6 +15,13 @@
       "when": 1781266629792,
       "tag": "0002_empty_vulture",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781561440118,
+      "tag": "0002_nice_living_tribunal",
+      "breakpoints": true
     }
   ]
 }

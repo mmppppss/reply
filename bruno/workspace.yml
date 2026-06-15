@@ -26,6 +26,8 @@ collections:
     path: "collections/contacts"
   - name: "knowledge"
     path: "collections/knowledge"
+  - name: "developer"
+    path: "collections/developer"
 
 specs:
 

@@ -11,3 +11,4 @@
   * [Messages](api/messages/README.md)
   * [Contacts](api/contacts/README.md)
   * [Knowledge](api/knowledge/README.md)
+  * [Developer](api/developer/README.md)

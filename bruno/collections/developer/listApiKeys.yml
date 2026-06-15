@@ -1,0 +1,24 @@
+info:
+  name: listApiKeys
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{url}}/api/v1/agents/{{id_agent}}/developer/keys"
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZDc3MjBhMC03Mjk1LTQ3MzYtYmE1OS0zZWZlYmEzNTk1NjEiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTc4MTU2MjgyMywiZXhwIjoxNzgyMTY3NjIzfQ.pnJfCYrwb6tL35OcEzXaWJju49_zBwzprgNPG7JFq14
+
+runtime:
+  variables:
+    - name: id_agent
+      value: 234af589-3b13-42fc-a8b9-49c33ba756a4
+    - name: jwt_token
+      value: ""
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

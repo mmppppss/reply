@@ -1,10 +1,10 @@
 name: testing
 variables:
   - name: token_jwt
-    value: ""
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZDc3MjBhMC03Mjk1LTQ3MzYtYmE1OS0zZWZlYmEzNTk1NjEiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTc4MTU2MjgyMywiZXhwIjoxNzgyMTY3NjIzfQ.pnJfCYrwb6tL35OcEzXaWJju49_zBwzprgNPG7JFq14
   - name: url
     value: http://localhost:3000
   - name: id_user
-    value: 0380b783-7b62-4af7-b5dc-b1da0b3299b4
+    value: cd7720a0-7295-4736-ba59-3efeba359561
   - name: id_agent
-    value: 91f76f63-5bde-4aa9-837a-f6bccab6d624
+    value: 234af589-3b13-42fc-a8b9-49c33ba756a4
