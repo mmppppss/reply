@@ -37,13 +37,17 @@ export class PlnModule implements IAgentModule {
 		if (config.temperature != null) options.temperature = config.temperature;
 		if (config.maxTokens != null) options.maxTokens = config.maxTokens;
 
-		const response = await this.openRouter.chat(
-			[
-				{ role: "system", content: systemPrompt },
-				{ role: "user", content: text },
-			],
-			options,
-		);
+		const messages = [
+			{ role: "system" as const, content: systemPrompt },
+			{ role: "user" as const, content: text },
+		];
+
+		let response = await this.openRouter.chat(messages, options);
+
+		if (response === null) {
+			console.log(`[PLN] OpenRouter no respondió, reintentando...`);
+			response = await this.openRouter.chat(messages, options);
+		}
 
 		console.log(response);
 
