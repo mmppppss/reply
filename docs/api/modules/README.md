@@ -5,6 +5,7 @@ Cada agente tiene modulos que procesan los mensajes entrantes en orden de priori
 Los modulos disponibles son:
 - **keyword** (priority 0): Busca coincidencias de palabras clave
 - **pln** (priority 1): Procesa con IA via OpenRouter
+- **developer** (priority 2): Habilita acceso programático via API keys
 
 ## List Modules
 

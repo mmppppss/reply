@@ -27,9 +27,9 @@ export class MessagesController {
 	public send = async (req: Request, res: Response): Promise<Response> => {
 		try {
 			const agentId = req.params.id_agent as string;
-			const { to, text } = req.body;
+			const { provider, to, text } = req.body;
 
-			const result = await this.service.sendByAgent(agentId, to, text);
+			const result = await this.service.sendByAgent(agentId, provider, to, text);
 
 			if (!result.success) {
 				return res.status(400).json({

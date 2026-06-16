@@ -171,7 +171,7 @@ Authorization: Bearer <jwt> o <api_key>
 | Método | Ruta | Descripción |
 |---|---|---|
 | `GET` | `/api/v1/agents/:id_agent/messages` | Listar mensajes del agente |
-| `POST` | `/api/v1/agents/:id_agent/messages/send` | Enviar mensaje desde el agente |
+| `POST` | `/api/v1/agents/:id_agent/messages/send` | Enviar mensaje (requiere `provider`) |
 | `GET` | `/api/v1/agents/:id_agent/contacts` | Listar contactos |
 | `GET` | `/api/v1/agents/:id_agent/contacts/:contact_id` | Ver detalle de contacto |
 
@@ -193,10 +193,17 @@ Authorization: Bearer <jwt> o <api_key>
 **BODY**:
 ```json
 {
+    "provider": "whatsapp",
     "to": "59112345678@s.whatsapp.net",
     "text": "Hola, este es un mensaje desde la API"
 }
 ```
+
+| Campo | Tipo | Obligatorio | Descripción |
+|---|---|---|---|
+| `provider` | string | sí | `"whatsapp"` o `"telegram"` |
+| `to` | string | sí | Destino |
+| `text` | string | sí | Contenido del mensaje |
 
 **RESPONSE**:
 ```json
@@ -209,7 +216,7 @@ Authorization: Bearer <jwt> o <api_key>
 }
 ```
 
-Si el agente no tiene una sesión activa, responde con error.
+Si el agente no tiene una sesión activa para ese provider, responde con error.
 
 ---
 
@@ -230,9 +237,15 @@ curl "http://localhost:3000/api/v1/agents/234af589-3b13-42fc-a8b9-49c33ba756a4/m
 curl "http://localhost:3000/api/v1/agents/234af589-3b13-42fc-a8b9-49c33ba756a4/contacts" \
   -H "Authorization: Bearer rp_a1b2c3d4e5f6789..."
 
-# 4. Usar la key para enviar un mensaje
+# 4. Usar la key para enviar un mensaje (WhatsApp)
 curl -X POST "http://localhost:3000/api/v1/agents/234af589-3b13-42fc-a8b9-49c33ba756a4/messages/send" \
   -H "Authorization: Bearer rp_a1b2c3d4e5f6789..." \
   -H "Content-Type: application/json" \
-  -d '{"to": "59112345678@s.whatsapp.net", "text": "Hola desde la API"}'
+  -d '{"provider": "whatsapp", "to": "59112345678@s.whatsapp.net", "text": "Hola desde la API"}'
+
+# 5. Usar la key para enviar un mensaje (Telegram)
+curl -X POST "http://localhost:3000/api/v1/agents/234af589-3b13-42fc-a8b9-49c33ba756a4/messages/send" \
+  -H "Authorization: Bearer rp_a1b2c3d4e5f6789..." \
+  -H "Content-Type: application/json" \
+  -d '{"provider": "telegram", "to": "123456789", "text": "Hola desde la API"}'
 ```

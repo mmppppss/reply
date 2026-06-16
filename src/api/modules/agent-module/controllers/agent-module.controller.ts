@@ -28,6 +28,9 @@ export class AgentModuleController {
         } catch (error: any) {
             return res.status(400).json({
                 message: error.message || "Error updating module",
+                ...(error.code && { code: error.code }),
+                ...(error.detail && { detail: error.detail }),
+                ...(error.hint && { hint: error.hint }),
             });
         }
     };

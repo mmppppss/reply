@@ -26,6 +26,11 @@ export class AgentService {
 			config: { systemPrompt: "Eres un asistente útil y amigable." },
 		});
 
+		await agentModuleRepo.upsert(agent.id, "developer", {
+			enabled: false,
+			priority: 2,
+		});
+
 		await agentConfigRepo.set(agent.id, "save_messages", false);
 		await agentConfigRepo.set(agent.id, "save_contacts", false);
 
@@ -151,15 +156,20 @@ export class AgentService {
 		userId: string,
 		to: string,
 		text: string,
+		provider: string,
 	): Promise<{ success: boolean; messageId?: string; error?: string }> {
 		await this.findById(agentId, userId);
-		const sessions = await sessionRepo.findByAgentId(agentId);
 
-		if (!sessions || sessions.length === 0) {
-			return { success: false, error: "No session found for this agent" };
+		const prov = await providerRepo.findByName(provider);
+		if (!prov) {
+			return { success: false, error: `Provider '${provider}' not found` };
 		}
 
-		const botManager = BotManager.getInstance();
-		return botManager.sendMessage(sessions[0].id, to, text);
+		const session = await sessionRepo.findByAgentAndProvider(agentId, prov.id);
+		if (!session) {
+			return { success: false, error: `No active ${provider} session for this agent` };
+		}
+
+		return BotManager.getInstance().sendMessage(session.id, to, text);
 	}
 }

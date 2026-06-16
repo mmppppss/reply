@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { AgentController } from "../controllers/agent.controller";
 import { validate } from "@/api/middlewares/validate.middleware";
-import { createAgentSchema, updateAgentSchema } from "../validators";
+import { createAgentSchema, updateAgentSchema, sendAgentMessageSchema } from "../validators";
 
 const router: Router = Router({ mergeParams: true });
 const controller = new AgentController();
@@ -30,6 +30,6 @@ router.put(
 );
 router.delete("/:id_agent", authMiddleware, controller.delete);
 
-router.post("/:id_agent/send", authMiddleware, controller.send);
+router.post("/:id_agent/send", authMiddleware, validate(sendAgentMessageSchema), controller.send);
 
 export default router;

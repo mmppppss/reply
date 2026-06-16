@@ -1,25 +1,29 @@
 import { BotManager } from "@/modules/whatsapp/application/BotManager";
-import { sessionRepo, messageRepo } from "@/infrastructure/database/repositories";
+import { sessionRepo, messageRepo, providerRepo } from "@/infrastructure/database/repositories";
 
 export class MessageService {
 	async sendByAgent(
 		agentId: string,
+		provider: string,
 		to: string,
 		text: string,
 	): Promise<{ success: boolean; messageId?: string; error?: string }> {
-		const sessions = await sessionRepo.findByAgentId(agentId);
-		const activeSession = Array.isArray(sessions) ? sessions.find((s: any) => s.status === "A") : null;
-
-		if (!activeSession) {
-			return { success: false, error: "No active session found for this agent" };
+		const prov = await providerRepo.findByName(provider);
+		if (!prov) {
+			return { success: false, error: `Provider '${provider}' not found` };
 		}
 
-		const result = await BotManager.getInstance().sendMessage(activeSession.id, to, text);
+		const session = await sessionRepo.findByAgentAndProvider(agentId, prov.id);
+		if (!session) {
+			return { success: false, error: `No active ${provider} session for this agent` };
+		}
+
+		const result = await BotManager.getInstance().sendMessage(session.id, to, text);
 
 		if (result.success) {
 			await messageRepo.create({
 				idAgent: agentId,
-				idSession: activeSession.id,
+				idSession: session.id,
 				direction: "outgoing",
 				to,
 				content: text,

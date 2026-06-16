@@ -63,6 +63,7 @@ export class ModuleRegistry {
         }
 
         const enabledModules = await agentModuleRepo.findEnabledByAgentId(agentId);
+        console.log(`[DEBUG] Enabled modules: ${enabledModules.map(m => m.moduleKey).join(', ')}`);
         if (!enabledModules || enabledModules.length === 0) {
             console.log(`[ModuleRegistry] No enabled modules for agent ${agentId}`);
             return;
@@ -71,10 +72,11 @@ export class ModuleRegistry {
         for (const am of enabledModules) {
             const module = this.modules.get(am.moduleKey);
             if (!module) {
-                console.log(`[ModuleRegistry] Module ${am.moduleKey} not registered`);
+                console.log(`[DEBUG] Module ${am.moduleKey} not registered, skipping`);
                 continue;
             }
 
+            console.log(`[DEBUG] Processing module: ${module.key}`);
             try {
                 const response = await module.process(
                     agentId,
@@ -84,6 +86,7 @@ export class ModuleRegistry {
                     (am.config as Record<string, any>) || {},
                 );
 
+                console.log(`[DEBUG] Module ${module.key} response:`, response);
                 if (response !== null) {
                     if (shouldSaveMessages) {
                         try {
@@ -102,7 +105,8 @@ export class ModuleRegistry {
                         }
                     }
 
-                    await BotManager.getInstance().sendMessage(sessionId, chatId, response);
+                    const result = await BotManager.getInstance().sendMessage(sessionId, chatId, response);
+                    console.log(`[DEBUG] BotManager.sendMessage result:`, result);
                     return;
                 }
             } catch (err) {

@@ -124,6 +124,22 @@ Genera un codigo QR en la terminal para escanear con WhatsApp.
 **BODY**:
 ```json
 {
+    "provider": "whatsapp",
+    "to": "59112345678@s.whatsapp.net",
+    "text": "Hola desde el bot!"
+}
+```
+
+| Campo | Tipo | Obligatorio | Descripción |
+|---|---|---|---|
+| `provider` | string | sí | `"whatsapp"` o `"telegram"` |
+| `to` | string | sí | Destino (JID con `@s.whatsapp.net` para WhatsApp, chat ID numérico para Telegram) |
+| `text` | string | sí | Contenido del mensaje |
+
+**Telegram:**
+```json
+{
+    "provider": "telegram",
     "to": "123456789",
     "text": "Hola desde el bot!"
 }

@@ -73,7 +73,7 @@ export class AgentModuleRepository extends BaseRepository<
     async toggleEnabled(agentId: string, moduleKey: string): Promise<AgentModule> {
         const existing = await this.findByAgentAndModule(agentId, moduleKey);
         if (!existing) {
-            throw new Error("[AGENT MODULE REPO 002] Agent module not found");
+            return this.upsert(agentId, moduleKey, { enabled: true });
         }
 
         await this.db

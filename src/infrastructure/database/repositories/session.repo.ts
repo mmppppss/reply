@@ -2,7 +2,7 @@ import { sessions } from "../schema/sessions.schema";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { BaseRepository } from "./base.repo";
 import { randomUUID } from "crypto";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export class SessionRepository extends BaseRepository<typeof sessions, string> {
 	constructor(dbInstance: PostgresJsDatabase<any>) {
@@ -61,6 +61,20 @@ export class SessionRepository extends BaseRepository<typeof sessions, string> {
 				updatedAt: new Date(),
 			})
 			.where(eq(sessions.id, id));
+	}
+
+	async findByAgentAndProvider(agentId: string, idProvider: string): Promise<any> {
+		const [result] = await this.db
+			.select()
+			.from(sessions)
+			.where(
+				and(
+					eq(sessions.idAgent, agentId),
+					eq(sessions.idProvider, idProvider),
+				),
+			)
+			.limit(1);
+		return result ?? null;
 	}
 
 	async deleteByAgentId(idAgent: string): Promise<void> {

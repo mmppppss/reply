@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "enabled": true,
-        "priority": "fallback",
+        "priority": 2,
         "config": {
           "systemPrompt": "Eres un agente de la direccion de carrera de ingenieria informatica y sistemas, responde de manera formal, inventate horarios si alguien te pregunta",
           
@@ -23,9 +23,9 @@ http:
 runtime:
   variables:
     - name: id_agent
-      value: 91f76f63-5bde-4aa9-837a-f6bccab6d624
+      value: 234af589-3b13-42fc-a8b9-49c33ba756a4
     - name: module_key
-      value: pln
+      value: developer
 
 settings:
   encodeUrl: true

@@ -133,7 +133,7 @@ export class AgentController {
 		try {
 			const userId = (req.params.id_user as string) || (req as any).user?.id;
 			const agentId = req.params.id_agent as string;
-			const { to, text } = req.body;
+			const { to, text, provider } = req.body;
 
 			if (!userId) {
 				return res.status(401).json({ message: "User not authenticated" });
@@ -148,6 +148,7 @@ export class AgentController {
 				userId,
 				to,
 				text,
+				provider,
 			);
 
 			if (!result.success) {

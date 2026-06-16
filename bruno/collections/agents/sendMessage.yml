@@ -10,7 +10,8 @@ http:
     type: json
     data: |-
       {
-        "to":"59171688979",
+        "provider": "whatsapp",
+        "to":"59171688979@s.whatsapp.net",
         "text":"hola que tal"
       }
   auth: inherit

@@ -7,15 +7,16 @@ http:
   method: POST
   url: "{{url}}/api/v1/agents/{{id_agent}}/messages/send"
   headers:
-    Authorization: Bearer {{api_key}}
+    - name: Authorization
+      value: Bearer rp_69cb55d667661480f46b07cd26f5fefae1e581a4bb7a471d30d8f9982ec57600
   body:
     type: json
-    data: |-
+    data: |
       {
-        "to": "59112345678@s.whatsapp.net",
-        "text": "Hola, este es un mensaje enviado desde la API"
+          "provider": "telegram",
+          "to": "7361893074",
+          "text": "arroz"
       }
-  auth: none
 
 runtime:
   variables:

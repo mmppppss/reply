@@ -7,8 +7,8 @@ http:
   method: GET
   url: "{{url}}/api/v1/agents/{{id_agent}}/contacts"
   headers:
-    Authorization: Bearer {{api_key}}
-  auth: none
+    - name: Authorization
+      value: Bearer rp_69cb55d667661480f46b07cd26f5fefae1e581a4bb7a471d30d8f9982ec57600
 
 runtime:
   variables:
