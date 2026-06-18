@@ -13,7 +13,7 @@ export class DeveloperController {
 			return req.auth.agentId ?? null;
 		}
 		if (req.auth?.authType === "jwt") {
-			return (req.body.idAgent as string) || (req.query.idAgent as string) || null;
+			return (req.body?.idAgent as string) || (req.query.idAgent as string) || null;
 		}
 		return null;
 	}

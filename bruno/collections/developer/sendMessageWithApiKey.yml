@@ -13,8 +13,8 @@ http:
     type: json
     data: |
       {
-          "provider": "whatsapp",
-          "to": "59112345678@s.whatsapp.net",
+          "provider": "telegram",
+          "to": "7361893074",
           "text": "Hola desde la API"
       }
 

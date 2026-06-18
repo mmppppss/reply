@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { apiKeyRepo } from "@/infrastructure/database/repositories";
+import { apiKeyRepo, apiLogRepo } from "@/infrastructure/database/repositories";
 
 const JWT_SECRET = process.env.JWT_SECRET || "clave_super_secreta_provisional";
 
 export interface AuthPayload {
 	userId?: string;
 	agentId?: string;
+	apiKeyId?: string;
 	authType: "jwt" | "apikey";
 }
 
@@ -44,7 +45,7 @@ async function tryApiKey(token: string): Promise<AuthPayload | null> {
 	if (!match) return null;
 
 	await apiKeyRepo.updateLastUsed(record.id).catch(() => {});
-	return { agentId: record.idAgent, authType: "apikey" };
+	return { agentId: record.idAgent, apiKeyId: record.id, authType: "apikey" };
 }
 
 export async function authMiddleware(
@@ -65,6 +66,21 @@ export async function authMiddleware(
 	}
 
 	req.auth = payload;
+
+	if (payload.authType === "apikey" && payload.agentId) {
+		const logIdApiKey = payload.apiKeyId;
+		res.on("finish", () => {
+			apiLogRepo.create({
+				idAgent: payload.agentId!,
+				idApiKey: logIdApiKey,
+				method: req.method,
+				path: req.originalUrl || req.url,
+				status: res.statusCode,
+				ip: req.ip || (req as any).connection?.remoteAddress,
+			}).catch(() => {});
+		});
+	}
+
 	next();
 }
 
