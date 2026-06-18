@@ -5,10 +5,10 @@ info:
 
 http:
   method: GET
-  url: "{{url}}/api/v1/agents/{{id_agent}}/developer/keys"
+  url: "{{url}}/api/v1/developer/keys?idAgent={{id_agent}}"
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZDc3MjBhMC03Mjk1LTQ3MzYtYmE1OS0zZWZlYmEzNTk1NjEiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTc4MTU2MjgyMywiZXhwIjoxNzgyMTY3NjIzfQ.pnJfCYrwb6tL35OcEzXaWJju49_zBwzprgNPG7JFq14
+    token: "{{token_jwt}}"
 
 runtime:
   variables:

@@ -4,7 +4,7 @@ import { contactRepo } from "@/infrastructure/database/repositories";
 export class ContactController {
     public list = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const agentId = req.params.id_agent as string;
+            const agentId = (res.locals.agentId || req.params.id_agent) as string;
             const result = await contactRepo.findByAgent(agentId);
             return res.status(200).json({ data: result });
         } catch (error: any) {
@@ -16,7 +16,7 @@ export class ContactController {
 
     public getByContactId = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const agentId = req.params.id_agent as string;
+            const agentId = (res.locals.agentId || req.params.id_agent) as string;
             const contactId = req.params.contact_id as string;
             const contact = await contactRepo.findByAgentAndContactId(agentId, contactId);
 
@@ -34,7 +34,7 @@ export class ContactController {
 
     public create = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const agentId = req.params.id_agent as string;
+            const agentId = (res.locals.agentId || req.params.id_agent) as string;
             const { contactId, name, platform, chatType, metadata } = req.body;
 
             if (!contactId) {
@@ -68,7 +68,7 @@ export class ContactController {
 
     public update = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const agentId = req.params.id_agent as string;
+            const agentId = (res.locals.agentId || req.params.id_agent) as string;
             const contactId = req.params.contact_id as string;
             const { name, platform, chatType, metadata } = req.body;
 
@@ -97,7 +97,7 @@ export class ContactController {
 
     public delete = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const agentId = req.params.id_agent as string;
+            const agentId = (res.locals.agentId || req.params.id_agent) as string;
             const contactId = req.params.contact_id as string;
 
             const existing = await contactRepo.findByAgentAndContactId(agentId, contactId);

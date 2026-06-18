@@ -5,15 +5,13 @@ info:
 
 http:
   method: GET
-  url: "{{url}}/api/v1/agents/{{id_agent}}/messages"
-  auth:
-    type: bearer
-    token: "{{token_jwt}}"
+  url: "{{url}}/api/v1/developer/messages"
+  headers:
+    - name: Authorization
+      value: Bearer rp_69cb55d667661480f46b07cd26f5fefae1e581a4bb7a471d30d8f9982ec57600
 
 runtime:
   variables:
-    - name: id_agent
-      value: 234af589-3b13-42fc-a8b9-49c33ba756a4
     - name: api_key
       value: ""
 

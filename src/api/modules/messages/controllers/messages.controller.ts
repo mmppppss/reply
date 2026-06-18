@@ -11,7 +11,7 @@ export class MessagesController {
 
 	public list = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const agentId = req.params.id_agent as string;
+			const agentId = (res.locals.agentId || req.params.id_agent) as string;
 			const limit = parseInt(req.query.limit as string) || 50;
 			const offset = parseInt(req.query.offset as string) || 0;
 
@@ -26,7 +26,7 @@ export class MessagesController {
 
 	public send = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const agentId = req.params.id_agent as string;
+			const agentId = (res.locals.agentId || req.params.id_agent) as string;
 			const { provider, to, text } = req.body;
 
 			const result = await this.service.sendByAgent(agentId, provider, to, text);

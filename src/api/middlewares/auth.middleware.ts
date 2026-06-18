@@ -73,7 +73,11 @@ export function requireAgentAccess(
 	res: Response,
 	next: NextFunction,
 ): void {
-	const agentId = req.params.id_agent;
+	// NOTE: req.params is REASSIGNED by Express Router({ mergeParams: true })
+	// on each middleware/route layer, so writing to req.params here is lost
+	// when the next layer runs. Use res.locals instead.
+	const agentId = req.params.id_agent || req.auth?.agentId || req.body?.idAgent || req.query?.idAgent;
+
 	if (!agentId) {
 		res.status(400).json({ message: "Agent ID required" });
 		return;
@@ -83,6 +87,8 @@ export function requireAgentAccess(
 		res.status(401).json({ message: "Not authenticated" });
 		return;
 	}
+
+	res.locals.agentId = agentId;
 
 	if (req.auth.authType === "jwt") {
 		next();

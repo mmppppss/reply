@@ -5,12 +5,13 @@ info:
 
 http:
   method: POST
-  url: "{{url}}/api/v1/agents/{{id_agent}}/developer/keys"
+  url: "{{url}}/api/v1/developer/keys"
   body:
     type: json
     data: |-
       {
-        "name": "Frontend Producción"
+        "name": "Frontend Producción",
+        "idAgent": "234af589-3b13-42fc-a8b9-49c33ba756a4"
       }
   auth:
     type: bearer

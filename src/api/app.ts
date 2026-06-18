@@ -40,6 +40,8 @@ app.use("/api/v1/agents/:id_agent/config", agentConfigRoutes);
 app.use("/api/v1/agents/:id_agent/messages", messagesRoutes);
 app.use("/api/v1/agents/:id_agent/contacts", contactRoutes);
 app.use("/api/v1/agents/:id_agent/knowledge", knowledgeRoutes);
-app.use("/api/v1/agents/:id_agent/developer", developerRoutes);
+app.use("/api/v1/developer/messages", messagesRoutes);
+app.use("/api/v1/developer/contacts", contactRoutes);
+app.use("/api/v1/developer", developerRoutes);
 
 export default app;

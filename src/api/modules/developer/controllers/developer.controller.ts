@@ -8,9 +8,23 @@ export class DeveloperController {
 		this.service = new DeveloperService();
 	}
 
+	private resolveAgentId(req: Request): string | null {
+		if (req.auth?.authType === "apikey") {
+			return req.auth.agentId ?? null;
+		}
+		if (req.auth?.authType === "jwt") {
+			return (req.body.idAgent as string) || (req.query.idAgent as string) || null;
+		}
+		return null;
+	}
+
 	public listKeys = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const agentId = req.params.id_agent as string;
+			const agentId = this.resolveAgentId(req);
+			if (!agentId) {
+				return res.status(400).json({ message: "Agent ID required. Use ?idAgent= for JWT auth." });
+			}
+
 			const keys = await this.service.listKeys(agentId);
 			const safe = keys.map((k) => ({
 				id: k.id,
@@ -30,7 +44,11 @@ export class DeveloperController {
 
 	public createKey = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const agentId = req.params.id_agent as string;
+			const agentId = this.resolveAgentId(req);
+			if (!agentId) {
+				return res.status(400).json({ message: "Agent ID required. Send idAgent in body for JWT auth." });
+			}
+
 			const { name } = req.body;
 			const result = await this.service.createKey(agentId, name);
 			return res.status(201).json({
@@ -61,7 +79,11 @@ export class DeveloperController {
 
 	public listLogs = async (req: Request, res: Response): Promise<Response> => {
 		try {
-			const agentId = req.params.id_agent as string;
+			const agentId = this.resolveAgentId(req);
+			if (!agentId) {
+				return res.status(400).json({ message: "Agent ID required. Use ?idAgent= for JWT auth." });
+			}
+
 			const logs = await this.service.listLogs(agentId);
 			return res.status(200).json({ data: logs });
 		} catch (error: any) {

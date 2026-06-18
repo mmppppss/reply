@@ -2,13 +2,12 @@ import { Router } from "express";
 import { DeveloperController } from "../controllers/developer.controller";
 import { validate } from "@/api/middlewares/validate.middleware";
 import { createApiKeySchema } from "../validators/developer.validator";
-import { authMiddleware, requireAgentAccess } from "@/api/middlewares/auth.middleware";
+import { authMiddleware } from "@/api/middlewares/auth.middleware";
 
-const router: Router = Router({ mergeParams: true });
+const router: Router = Router();
 const controller = new DeveloperController();
 
 router.use(authMiddleware);
-router.use(requireAgentAccess);
 
 router.get("/keys", controller.listKeys);
 router.post("/keys", validate(createApiKeySchema), controller.createKey);

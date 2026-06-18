@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{url}}/api/v1/agents/{{id_agent}}/developer/logs"
+  url: "{{url}}/api/v1/developer/logs?idAgent={{id_agent}}"
   auth:
     type: bearer
     token: "{{token_jwt}}"

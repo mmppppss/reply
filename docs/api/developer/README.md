@@ -15,7 +15,9 @@ El token puede ser:
 | Tipo | Obtención | Acceso |
 |---|---|---|
 | **JWT** | `POST /api/v1/auth/login` | Completo (CRUD keys, config, etc.) |
-| **API Key** | `POST /api/v1/agents/:id/developer/keys` | Solo mensajes y contactos del agente |
+| **API Key** | `POST /api/v1/developer/keys` | Solo mensajes y contactos del agente |
+
+Con API Key **no es necesario** pasar `id_agent` en la URL — la key ya sabe a qué agente pertenece.
 
 ---
 
@@ -25,14 +27,14 @@ El token puede ser:
 sequenceDiagram
     Admin->>API: POST /auth/login (usuario+contraseña)
     API-->>Admin: JWT token
-    Admin->>API: POST /developer/keys (crear key)
+    Admin->>API: POST /developer/keys (body: { name, idAgent })
     API-->>Admin: rp_abc123... (se muestra UNA VEZ)
     Admin->>Dev: Entrega la API key
-    Dev->>API: GET /messages (Authorization: Bearer rp_abc123...)
+    Dev->>API: GET /developer/messages (Authorization: Bearer rp_abc123...)
     API-->>Dev: [lista de mensajes]
-    Dev->>API: GET /contacts (Authorization: Bearer rp_abc123...)
+    Dev->>API: GET /developer/contacts (Authorization: Bearer rp_abc123...)
     API-->>Dev: [lista de contactos]
-    Dev->>API: POST /messages/send (Authorization: Bearer rp_abc123...)
+    Dev->>API: POST /developer/messages/send (Authorization: Bearer rp_abc123...)
     API-->>Dev: { message: "Message sent" }
 ```
 
@@ -44,7 +46,7 @@ sequenceDiagram
 
 > GET
 
-**URL**: `/api/v1/agents/:id_agent/developer/keys`
+**URL**: `/api/v1/developer/keys?idAgent=<uuid>`
 
 **Headers**:
 ```
@@ -73,7 +75,7 @@ Authorization: Bearer <jwt>
 
 > POST
 
-**URL**: `/api/v1/agents/:id_agent/developer/keys`
+**URL**: `/api/v1/developer/keys`
 
 **Headers**:
 ```
@@ -83,9 +85,15 @@ Authorization: Bearer <jwt>
 **BODY**:
 ```json
 {
-    "name": "Frontend Producción"
+    "name": "Frontend Producción",
+    "idAgent": "234af589-3b13-42fc-a8b9-49c33ba756a4"
 }
 ```
+
+| Campo | Tipo | Obligatorio | Descripción |
+|---|---|---|---|
+| `name` | string | sí | Nombre descriptivo de la key |
+| `idAgent` | string | para JWT | UUID del agente (solo necesario con JWT, con API key se ignora) |
 
 **RESPONSE** (201):
 ```json
@@ -115,7 +123,7 @@ rp_<64 caracteres hexadecimales>
 
 > DELETE
 
-**URL**: `/api/v1/agents/:id_agent/developer/keys/:id_key`
+**URL**: `/api/v1/developer/keys/:id_key`
 
 **Headers**:
 ```
@@ -139,12 +147,16 @@ Cada request autenticado con API Key registra un log automáticamente.
 
 > GET
 
-**URL**: `/api/v1/agents/:id_agent/developer/logs`
+**URL**: `/api/v1/developer/logs?idAgent=<uuid>`
 
 **Headers**:
 ```
 Authorization: Bearer <jwt> o <api_key>
 ```
+
+| Parámetro | Con JWT | Con API Key |
+|---|---|---|
+| `idAgent` | Requerido (query) | Se ignora (se usa el de la key) |
 
 **RESPONSE**:
 ```json
@@ -155,7 +167,7 @@ Authorization: Bearer <jwt> o <api_key>
             "idAgent": "234af589-...",
             "idApiKey": "uuid-de-la-key",
             "method": "GET",
-            "path": "/api/v1/agents/234af589-.../messages",
+            "path": "/api/v1/developer/messages",
             "status": 200,
             "ip": "::1",
             "createdAt": "2026-06-15T10:30:00Z"
@@ -168,14 +180,16 @@ Authorization: Bearer <jwt> o <api_key>
 
 ## Endpoints accesibles con API Key
 
+Con API Key **no se pasa `id_agent` en la URL**. Se usa el agente asociado a la key automáticamente.
+
 | Método | Ruta | Descripción |
 |---|---|---|
-| `GET` | `/api/v1/agents/:id_agent/messages` | Listar mensajes del agente |
-| `POST` | `/api/v1/agents/:id_agent/messages/send` | Enviar mensaje (requiere `provider`) |
-| `GET` | `/api/v1/agents/:id_agent/contacts` | Listar contactos |
-| `GET` | `/api/v1/agents/:id_agent/contacts/:contact_id` | Ver detalle de contacto |
+| `GET` | `/api/v1/developer/messages` | Listar mensajes del agente |
+| `POST` | `/api/v1/developer/messages/send` | Enviar mensaje (requiere `provider`) |
+| `GET` | `/api/v1/developer/contacts` | Listar contactos |
+| `GET` | `/api/v1/developer/contacts/:contact_id` | Ver detalle de contacto |
 
-La API key **solo** funciona para el agente al que fue asignada. Un JWT puede acceder a cualquier agente.
+> Para JWT se usan las rutas con `:id_agent` en la URL: `/api/v1/agents/:id_agent/messages`, etc.
 
 ---
 
@@ -183,7 +197,7 @@ La API key **solo** funciona para el agente al que fue asignada. Un JWT puede ac
 
 > POST
 
-**URL**: `/api/v1/agents/:id_agent/messages/send`
+**URL**: `/api/v1/developer/messages/send`
 
 **Headers**:
 ```
@@ -224,28 +238,32 @@ Si el agente no tiene una sesión activa para ese provider, responde con error.
 
 ```bash
 # 1. Crear key (requiere JWT)
-curl -X POST "http://localhost:3000/api/v1/agents/234af589-3b13-42fc-a8b9-49c33ba756a4/developer/keys" \
+curl -X POST "http://localhost:3000/api/v1/developer/keys" \
   -H "Authorization: Bearer <jwt>" \
   -H "Content-Type: application/json" \
-  -d '{"name": "Mi App"}'
+  -d '{"name": "Mi App", "idAgent": "234af589-3b13-42fc-a8b9-49c33ba756a4"}'
 
-# 2. Usar la key para leer mensajes
-curl "http://localhost:3000/api/v1/agents/234af589-3b13-42fc-a8b9-49c33ba756a4/messages" \
+# 2. Usar la key para leer mensajes (sin id_agent en URL)
+curl "http://localhost:3000/api/v1/developer/messages" \
   -H "Authorization: Bearer rp_a1b2c3d4e5f6789..."
 
-# 3. Usar la key para leer contactos
-curl "http://localhost:3000/api/v1/agents/234af589-3b13-42fc-a8b9-49c33ba756a4/contacts" \
+# 3. Usar la key para leer contactos (sin id_agent en URL)
+curl "http://localhost:3000/api/v1/developer/contacts" \
   -H "Authorization: Bearer rp_a1b2c3d4e5f6789..."
 
-# 4. Usar la key para enviar un mensaje (WhatsApp)
-curl -X POST "http://localhost:3000/api/v1/agents/234af589-3b13-42fc-a8b9-49c33ba756a4/messages/send" \
+# 4. Usar la key para enviar mensaje (WhatsApp)
+curl -X POST "http://localhost:3000/api/v1/developer/messages/send" \
   -H "Authorization: Bearer rp_a1b2c3d4e5f6789..." \
   -H "Content-Type: application/json" \
   -d '{"provider": "whatsapp", "to": "59112345678@s.whatsapp.net", "text": "Hola desde la API"}'
 
-# 5. Usar la key para enviar un mensaje (Telegram)
-curl -X POST "http://localhost:3000/api/v1/agents/234af589-3b13-42fc-a8b9-49c33ba756a4/messages/send" \
+# 5. Usar la key para enviar mensaje (Telegram)
+curl -X POST "http://localhost:3000/api/v1/developer/messages/send" \
   -H "Authorization: Bearer rp_a1b2c3d4e5f6789..." \
   -H "Content-Type: application/json" \
   -d '{"provider": "telegram", "to": "123456789", "text": "Hola desde la API"}'
+
+# 6. Listar keys (JWT)
+curl "http://localhost:3000/api/v1/developer/keys?idAgent=234af589-3b13-42fc-a8b9-49c33ba756a4" \
+  -H "Authorization: Bearer <jwt>"
 ```
