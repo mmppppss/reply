@@ -84,6 +84,7 @@ export class ModuleRegistry {
                     sessionId,
                     chatId,
                     (am.config as Record<string, any>) || {},
+                    platform,
                 );
 
                 console.log(`[DEBUG] Module ${module.key} response:`, response);

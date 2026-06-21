@@ -37,6 +37,7 @@ export class KeywordModule implements IAgentModule {
         _sessionId: string,
         _chatId: string,
         _config: Record<string, any>,
+        _platform?: string,
     ): Promise<string | null> {
         const rules = this.cache.get(agentId);
         if (!rules || rules.length === 0) return null;

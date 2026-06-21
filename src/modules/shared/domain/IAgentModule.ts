@@ -6,5 +6,6 @@ export interface IAgentModule {
         sessionId: string,
         chatId: string,
         config: Record<string, any>,
+        platform?: string,
     ): Promise<string | null>;
 }
